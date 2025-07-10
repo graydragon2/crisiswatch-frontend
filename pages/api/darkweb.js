@@ -17,10 +17,16 @@ router.get('/darkweb', async (req, res) => {
     const leakRes = await fetch(url);
     const json = await leakRes.json();
 
-    if (!leakRes.ok || json.error) {
-      console.error('LeakCheck API error:', json);
-      return res.status(502).json({ error: 'LeakCheck API error', details: json });
-    }
+ if (!leakRes.ok) {
+  console.error('LeakCheck HTTP error:', leakRes.status, json);
+  return res.status(502).json({ error: 'LeakCheck API returned bad status', status: leakRes.status, details: json });
+}
+
+if (json.error) {
+  console.error('LeakCheck logical error:', json.error);
+  return res.status(200).json({ success: false, error: json.error }); // not a server error
+}
+
 
     res.json(json);
   } catch (err) {

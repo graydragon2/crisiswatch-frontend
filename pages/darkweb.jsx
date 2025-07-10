@@ -46,12 +46,12 @@ export default function DarkWebMonitor() {
       </div>
 
       {result && (
-        <div className="bg-gray-50 dark:bg-gray-900 border rounded p-4 shadow text-black dark:text-white">
+        <div className="bg-white dark:bg-gray-800 border rounded p-4 shadow text-gray-800 dark:text-gray-100">
           {result.error ? (
             <p className="text-red-600 dark:text-red-400 font-medium">⚠️ {result.error}</p>
           ) : result.success ? (
             <>
-              <p className="text-green-700 dark:text-green-400 font-semibold">
+              <p className="text-emerald-700 dark:text-emerald-300 font-semibold">
                 ✅ <strong>{email}</strong> was found in {result.found} breaches.
               </p>
               {result.fields && (

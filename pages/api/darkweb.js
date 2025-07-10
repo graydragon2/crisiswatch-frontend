@@ -1,32 +1,33 @@
-// pages/api/darkweb.js
+// /api/darkweb.js
+import express from 'express';
+import fetch from 'node-fetch'; // or global fetch in Node 18+
 
-export default async function handler(req, res) {
-  const { email } = req.query;
+const router = express.Router();
 
-  if (!email) {
-    return res.status(400).json({ error: 'Email is required' });
-  }
-
+router.get('/darkweb', async (req, res) => {
+  const email = req.query.email;
   const apiKey = process.env.LEAKCHECK_API_KEY;
 
-  if (!apiKey) {
-    return res.status(500).json({ error: 'Missing API key in environment variables' });
+  if (!email || !apiKey) {
+    return res.status(400).json({ error: 'Missing email or API key' });
   }
 
   try {
-    const response = await fetch(
-      `https://leakcheck.io/api?key=${apiKey}&check=${encodeURIComponent(email)}&type=email`
-    );
+    const leakCheckURL = `https://leakcheck.io/api/public?key=${apiKey}&check=${encodeURIComponent(email)}&type=email`;
 
+    const response = await fetch(leakCheckURL);
     const data = await response.json();
 
-    if (!data.success) {
-      return res.status(500).json({ error: data.message || 'API error' });
+    if (data.success === false || !data || data.error) {
+      console.error('LeakCheck API returned:', data);
+      return res.status(502).json({ error: 'LeakCheck API error', details: data });
     }
 
-    return res.status(200).json({ breaches: data.result });
-  } catch (error) {
-    console.error('LeakCheck API error:', error);
-    return res.status(500).json({ error: 'Internal server error' });
+    res.json(data);
+  } catch (err) {
+    console.error('Fetch error:', err);
+    res.status(500).json({ error: 'Internal server error' });
   }
-}
+});
+
+export default router;

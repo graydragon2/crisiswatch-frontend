@@ -5,7 +5,7 @@ export default function DarkWebMonitor() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const apiUrl = 'https://crisiswatch-api.onrender.com/api/darkweb?email=';
+  const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/darkweb?email=`;  
 
   const checkBreach = async () => {
     if (!email) return;

@@ -5,11 +5,11 @@ export default function DarkWebMonitor() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/darkweb?email=`;  
+  // Use environment variable for API endpoint
+  const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/darkweb?email=`;
 
   const checkBreach = async () => {
     if (!email) return;
-
     setLoading(true);
     setResult(null);
 
@@ -26,7 +26,7 @@ export default function DarkWebMonitor() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 space-y-6">
+    <div className="max-w-3xl mx-auto p-6 space-y-6">
       <h1 className="text-3xl font-bold text-center">🕵️ Dark Web Monitor</h1>
 
       <div className="flex flex-col sm:flex-row gap-4">
@@ -50,61 +50,33 @@ export default function DarkWebMonitor() {
         <div className="bg-gray-50 border rounded p-4 shadow">
           {result.error ? (
             <p className="text-red-600 font-medium">⚠️ {result.error}</p>
-          ) : result.found ? (
-            <div>
+          ) : result.success ? (
+            <>
               <p className="text-green-700 font-semibold">
-                ✅ Breaches found for <strong>{email}</strong>
+                ✅ <strong>{email}</strong> was found in {result.found} breaches.
               </p>
-              <p className="mt-2"><strong>Total entries:</strong> {result.found}</p>
-              <p><strong>Fields exposed:</strong> {result.fields?.join(', ')}</p>
 
-              <div className="mt-4">
-                <h3 className="font-bold mb-2">Sources:</h3>
-                <ul className="list-disc pl-5 space-y-1 max-h-60 overflow-auto text-sm">
-                  {result.sources?.map((src, idx) => (
-                    <li key={idx}>
-                      {src.name} {src.date ? `(${src.date})` : ''}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+              {result.fields && (
+                <div className="mt-2">
+                  <p><strong>Fields exposed:</strong> {result.fields.join(', ')}</p>
+                </div>
+              )}
+
+              {result.sources?.length > 0 && (
+                <div className="mt-4">
+                  <h3 className="font-bold mb-2">Sources (first 15 shown):</h3>
+                  <ul className="list-disc pl-5 max-h-64 overflow-auto text-sm">
+                    {result.sources.slice(0, 15).map((src, idx) => (
+                      <li key={idx}>
+                        {src.name} {src.date ? `(${src.date})` : ''}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </>
           ) : (
             <p className="text-yellow-600 font-medium">No breaches found for this email.</p>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
-
-    <div className="max-w-xl mx-auto p-4 space-y-4">
-      <h1 className="text-2xl font-bold">Dark Web Monitor</h1>
-
-      <input
-        type="email"
-        className="w-full p-2 border rounded"
-        placeholder="Enter email address"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-
-      <button
-        className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800"
-        onClick={checkBreach}
-        disabled={loading}
-      >
-        {loading ? 'Checking...' : 'Check Now'}
-      </button>
-
-      {result && (
-        <div className="bg-gray-100 p-4 rounded shadow mt-4">
-          {result.error ? (
-            <p className="text-red-500">{result.error}</p>
-          ) : (
-            <pre className="text-sm whitespace-pre-wrap">
-              {JSON.stringify(result, null, 2)}
-            </pre>
           )}
         </div>
       )}

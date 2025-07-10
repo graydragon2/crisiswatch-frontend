@@ -47,40 +47,34 @@ export default function DarkWebMonitor() {
       </div>
 
       {result && (
-        <div className="bg-gray-50 border rounded p-4 shadow">
-          {result.error ? (
-            <p className="text-red-600 font-medium">⚠️ {result.error}</p>
-          ) : result.success ? (
-            <>
-              <p className="text-green-700 font-semibold">
-                ✅ <strong>{email}</strong> was found in {result.found} breaches.
-              </p>
+  <div className="bg-gray-50 dark:bg-gray-900 border rounded p-4 shadow text-black dark:text-white">
+    {result.error ? (
+      <p className="text-red-600 dark:text-red-400 font-medium">⚠️ {result.error}</p>
+    ) : result.success ? (
+      <>
+        <p className="text-green-700 dark:text-green-400 font-semibold">
+          ✅ <strong>{email}</strong> was found in {result.found} breaches.
+        </p>
 
-              {result.fields && (
-                <div className="mt-2">
-                  <p><strong>Fields exposed:</strong> {result.fields.join(', ')}</p>
-                </div>
-              )}
+        {result.fields && (
+          <p className="mt-2"><strong>Fields exposed:</strong> {result.fields.join(', ')}</p>
+        )}
 
-              {result.sources?.length > 0 && (
-                <div className="mt-4">
-                  <h3 className="font-bold mb-2">Sources (first 15 shown):</h3>
-                  <ul className="list-disc pl-5 max-h-64 overflow-auto text-sm">
-                    {result.sources.slice(0, 15).map((src, idx) => (
-                      <li key={idx}>
-                        {src.name} {src.date ? `(${src.date})` : ''}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </>
-          ) : (
-            <p className="text-yellow-600 font-medium">No breaches found for this email.</p>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
-
+        {result.sources?.length > 0 && (
+          <div className="mt-4">
+            <h3 className="font-bold mb-2">Sources (first 15 shown):</h3>
+            <ul className="list-disc pl-5 max-h-64 overflow-auto text-sm">
+              {result.sources.slice(0, 15).map((src, idx) => (
+                <li key={idx}>
+                  {src.name} {src.date ? `(${src.date})` : ''}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </>
+    ) : (
+      <p className="text-yellow-600 dark:text-yellow-400 font-medium">No breaches found for this email.</p>
+    )}
+  </div>
+)}

@@ -10,6 +10,10 @@ export default function FeedList() {
     setFeeds(data.feeds || []);
   };
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const res = await fetch(`${apiUrl}/api/feeds`);
+
+
   const addFeed = async () => {
     if (!url) return;
     await fetch('http://localhost:3000/api/feeds', {

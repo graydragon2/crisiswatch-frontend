@@ -1,24 +1,3 @@
-# Dependencies
 node_modules/
-
-# Logs
-logs/
-*.log
-
-# Build output
-.next/
-out/
-
-# Environment variables
 .env
-.env.local
-
-# Static data that should be generated, not tracked
-public/data/
-pages/api/data/feeds.json
-
-# IDEs and OS
-.vscode/
-.idea/
 .DS_Store
-Thumbs.db

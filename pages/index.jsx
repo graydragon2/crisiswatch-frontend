@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import FeedList from '@/components/FeedList';
 
 export default function Dashboard() {
   const [data, setData] = useState([]);
@@ -26,12 +27,21 @@ export default function Dashboard() {
   return (
     <div className="p-4">
       <h1 className="text-xl font-bold mb-4">Threat Feed</h1>
-      {loading && <p>Loading...</p>}
+
+      <FeedList /> {/* ✅ Displays active RSS feeds */}
+
+      {loading && <p>Loading threats...</p>}
       {!loading && data.length === 0 && <p>No threats found.</p>}
-      <ul className="space-y-2">
+
+      <ul className="space-y-2 mt-4">
         {data.map((item, idx) => (
           <li key={idx} className="border-b pb-2">
-            <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+            <a
+              href={item.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:underline"
+            >
               {item.title}
             </a>
           </li>

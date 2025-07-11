@@ -9,8 +9,9 @@ export default function FeedList() {
   useEffect(() => {
     const fetchFeeds = async () => {
       try {
-        const res = await fetch('/api/feeds');
+        const res = await fetch('https://crisiswatch-api.onrender.com/api/feeds');
         const json = await res.json();
+        setFeeds(data.feeds || []);
         if (json.feeds) setFeeds(json.feeds);
         else throw new Error('Missing feeds array');
       } catch (err) {

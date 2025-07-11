@@ -5,14 +5,14 @@ export default function FeedList() {
   const [url, setUrl] = useState('');
 
   const fetchFeeds = async () => {
-    const res = await fetch('/api/feeds');
+    const res = await fetch('http://localhost:3000/api/feeds');
     const data = await res.json();
     setFeeds(data.feeds || []);
   };
 
   const addFeed = async () => {
     if (!url) return;
-    await fetch('/api/feeds', {
+    await fetch('http://localhost:3000/api/feeds', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url })
@@ -22,7 +22,7 @@ export default function FeedList() {
   };
 
   const removeFeed = async (urlToRemove) => {
-    await fetch('/api/feeds', {
+    await fetch('http://localhost:3000/api/feeds', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url: urlToRemove })

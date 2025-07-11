@@ -1,28 +1,24 @@
-# Node dependencies
+# Dependencies
 node_modules/
+
+# Logs
+logs/
+*.log
 
 # Build output
 .next/
 out/
 
-# Environment files
+# Environment variables
 .env
 .env.local
-.env.production
-.env.development
 
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Static data that should be generated, not tracked
+public/data/
+pages/api/data/feeds.json
 
-# OS files
-.DS_Store
-Thumbs.db
-
-# IDE/editor
+# IDEs and OS
 .vscode/
 .idea/
-
-# Test coverage
-coverage/
+.DS_Store
+Thumbs.db

@@ -1,64 +1,70 @@
 'use client';
 
-import FeedList from '@/components/FeedList';
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import SourceToggle from '@/components/SourceToggle';
 
-export default function DashboardPage() {
-  const [threats, setThreats] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function MainLayout({ children }) {
+  const [darkMode, setDarkMode] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    const fetchThreats = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch('/api/threats');
-        const json = await res.json();
-        setThreats(json.items || []);
-      } catch (err) {
-        console.error('Failed to fetch threats:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchThreats();
-    const interval = setInterval(fetchThreats, 5 * 60 * 1000);
-    return () => clearInterval(interval);
+    const saved = localStorage.getItem('theme');
+    if (saved === 'dark') {
+      document.documentElement.classList.add('dark');
+      setDarkMode(true);
+    }
   }, []);
 
-  return (
-    <div className="p-8 max-w-6xl mx-auto space-y-10">
-      {/* Threat Feed Section */}
-      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6">
-        <h2 className="text-2xl font-bold mb-4 text-black dark:text-white">
-          🛡️ Threat Feed
-        </h2>
-        {loading ? (
-          <p className="text-gray-600 dark:text-gray-400">Loading...</p>
-        ) : threats.length === 0 ? (
-          <p className="text-gray-600 dark:text-gray-400">No threats found.</p>
-        ) : (
-          <ul className="space-y-3">
-            {threats.map((item, idx) => (
-              <li key={idx} className="border-b border-gray-300 dark:border-gray-700 pb-2">
-                <a
-                  href={item.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-700 dark:text-blue-400 hover:underline"
-                >
-                  {item.title}
-                </a>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+  const toggleDarkMode = () => {
+    const enabled = !darkMode;
+    setDarkMode(enabled);
+    if (enabled) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  };
 
-      {/* RSS FeedList Section */}
-      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6">
-        <FeedList />
-      </div>
+  const handleLogout = () => {
+    router.push('/');
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-950 text-black dark:text-white transition-colors">
+      {/* HEADER */}
+      <header className="sticky top-0 z-50 bg-white dark:bg-gray-900 shadow-md">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <h1 className="text-2xl font-bold">CrisisWatch</h1>
+          <nav className="flex items-center gap-6 text-sm">
+            <Link href="/dashboard" className="hover:underline">
+              Dashboard
+            </Link>
+            <Link href="/settings" className="hover:underline">
+              Settings
+            </Link>
+            <Link href="/darkweb" className="hover:underline">
+              Dark Web
+            </Link>
+            <SourceToggle />
+            <button
+              onClick={toggleDarkMode}
+              className="px-2 py-1 rounded border border-gray-500 dark:border-gray-300 text-xs"
+            >
+              {darkMode ? 'Light Mode' : 'Dark Mode'}
+            </button>
+            <button onClick={handleLogout} className="text-red-500 hover:underline">
+              Logout
+            </button>
+          </nav>
+        </div>
+      </header>
+
+      {/* MAIN CONTENT */}
+      <main className="px-6 py-8 max-w-7xl mx-auto">{children}</main>
     </div>
   );
 }

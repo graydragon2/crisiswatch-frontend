@@ -1,47 +1,70 @@
-import { useEffect, useState } from 'react';
+'use client';
 
-export default function Dashboard() {
+import FeedList from '@/components/FeedList';
+import { useState, useEffect } from 'react';
+
+export default function DashboardPage() {
   const [threats, setThreats] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/threats')
-      .then(res => res.json())
-      .then(data => {
-        setThreats(data.items || []);
+    const fetchThreats = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch('/api/threats');
+        const json = await res.json();
+        setThreats(json.items || []);
+      } catch (err) {
+        console.error('Failed to fetch threats:', err);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    fetchThreats();
+    const interval = setInterval(fetchThreats, 5 * 60 * 1000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-6">
-      <h1 className="text-3xl font-bold mb-4">Threat Dashboard</h1>
-
-      {loading ? (
-        <p>Loading threat data...</p>
-      ) : threats.length === 0 ? (
-        <p>No current threats found.</p>
-      ) : (
-        <div className="grid gap-4 md:grid-cols-2">
-          {threats.map((item, idx) => (
-            <div key={idx} className="bg-gray-800 p-4 rounded shadow">
-              <h2 className="text-xl font-semibold">{item.title}</h2>
-              <p className="text-sm opacity-75">{item.pubDate}</p>
-              <p className="mt-2">{item.description || item.contentSnippet}</p>
-              {item.link && (
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-950 p-8 max-w-6xl mx-auto space-y-10">
+      {/* Threat Feed */}
+      <section className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-6">
+        <h2 className="text-2xl font-semibold text-black dark:text-white mb-4 flex items-center gap-2">
+          🛡️ Threat Feed
+        </h2>
+        {loading ? (
+          <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+        ) : threats.length === 0 ? (
+          <p className="text-gray-600 dark:text-gray-400">No threats found.</p>
+        ) : (
+          <ul className="space-y-3">
+            {threats.map((item, idx) => (
+              <li
+                key={idx}
+                className="border-b border-gray-300 dark:border-gray-700 pb-2"
+              >
                 <a
                   href={item.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block mt-3 text-blue-400 hover:underline"
+                  className="text-blue-700 dark:text-blue-400 hover:underline"
                 >
-                  Read More
+                  {item.title}
                 </a>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      {/* Feed List */}
+      <section className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-6">
+        <h2 className="text-2xl font-semibold text-black dark:text-white mb-4 flex items-center gap-2">
+          📰 Active RSS Feeds
+        </h2>
+        <FeedList />
+      </section>
     </div>
   );
 }

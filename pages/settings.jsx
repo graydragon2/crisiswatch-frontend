@@ -26,7 +26,9 @@ export default function SettingsPage() {
   return (
     <div className="max-w-4xl mx-auto p-8 space-y-8">
       <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6">
-        <h2 className="text-2xl font-bold mb-4">RSS Feed Preferences</h2>
+        <h2 className="text-2xl font-bold mb-4 text-black dark:text-white">
+  RSS Feed Preferences
+</h2>
 
         <div className="mb-4">
           <label className="block font-semibold mb-1">Keyword Filters (comma separated)</label>

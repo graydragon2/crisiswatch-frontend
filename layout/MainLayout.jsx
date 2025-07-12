@@ -11,4 +11,9 @@ export default function MainLayout({ children }) {
   const router = useRouter();
 
   useEffect(() => {
-    const saved = localStorage.getItem('
+  const saved = localStorage.getItem('theme');
+  if (saved === 'dark') {
+    document.documentElement.classList.add('dark');
+    setDarkMode(true);
+  }
+}, []);

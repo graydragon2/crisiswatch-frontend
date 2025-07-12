@@ -79,14 +79,12 @@ export default function Dashboard() {
           </Card>
 
           <Card>
-            <CardHeader>
-              <CardTitle>🌐 Dark Web Monitoring</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                No compromised credentials found.
-              </p>
-            </CardContent>
+           <CardHeader>
+            <CardTitle>🌐 Dark Web Monitoring</CardTitle>
+           </CardHeader>
+           <CardContent>
+            <DarkWebChecker />
+           </CardContent>
           </Card>
 
           <Card>

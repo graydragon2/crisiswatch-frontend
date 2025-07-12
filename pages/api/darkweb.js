@@ -1,28 +1,27 @@
 export default async function handler(req, res) {
-  const { email } = req.query;
+  const email = req.query.email;
+  const apiKey = process.env.LEAKCHECK_API_KEY;
 
-  if (!email) {
-    return res.status(400).json({ error: 'Missing email' });
+  if (!email || !apiKey) {
+    return res.status(400).json({ error: 'Missing email or API key' });
   }
 
   try {
-    const apiKey = process.env.LEAKCHECK_API_KEY;
-    if (!apiKey) {
-      return res.status(500).json({ error: 'Missing LeakCheck API Key in environment' });
-    }
-
     const response = await fetch(
-      \`https://leakcheck.io/api?key=\${apiKey}&check=\${encodeURIComponent(email)}&type=email\`
+      'https://leakcheck.io/api?key=' + apiKey +
+      '&check=' + encodeURIComponent(email) +
+      '&type=email'
     );
 
+    const data = await response.json();
+
     if (!response.ok) {
-      throw new Error(\`LeakCheck API error: \${response.statusText}\`);
+      return res.status(response.status).json({ error: data.message || 'Error checking breach' });
     }
 
-    const result = await response.json();
-    return res.status(200).json({ breaches: result.result || [] });
+    res.status(200).json({ breaches: data.success ? data.result : [] });
   } catch (error) {
-    console.error('Dark Web API error:', error);
-    return res.status(500).json({ error: 'Error checking dark web breaches' });
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 }

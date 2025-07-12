@@ -8,7 +8,7 @@ export default function DarkWebChecker() {
   const checkBreach = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`https://crisiswatch-api-production.up.railway.app/`);
+      const res = await fetch(`const res = await fetch(`crisiswatch-api-production.up.railway.app/api/darkweb?email=${encodeURIComponent(email)}`);`);
       const data = await res.json();
       setResult(data);
     } catch (err) {

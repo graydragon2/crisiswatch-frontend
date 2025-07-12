@@ -1,14 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import FeedList from '@/components/FeedList';
-import Sidebar from '@/components/Sidebar';
+import FeedList from '../components/FeedList';
+import Sidebar from '../components/Sidebar';
 import {
   Card,
   CardHeader,
   CardTitle,
   CardContent
-} from '@/components/ui/card';
+} from '../components/ui/card';
 
 export default function Dashboard() {
   const [threats, setThreats] = useState([]);
@@ -41,7 +41,6 @@ export default function Dashboard() {
         <h1 className="text-2xl font-bold mb-6">CrisisWatch Dashboard</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* 🛡️ Threat Feed */}
           <Card className="md:col-span-2">
             <CardHeader>
               <CardTitle>🛡️ Threat Feed</CardTitle>
@@ -54,10 +53,7 @@ export default function Dashboard() {
               ) : (
                 <ul className="space-y-3">
                   {threats.map((item, idx) => (
-                    <li
-                      key={idx}
-                      className="border-b border-border pb-2"
-                    >
+                    <li key={idx} className="border-b border-border pb-2">
                       <a
                         href={item.link}
                         target="_blank"
@@ -73,7 +69,6 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          {/* RSS Feed Manager */}
           <Card>
             <CardHeader>
               <CardTitle>📡 Manage RSS Feeds</CardTitle>
@@ -83,7 +78,6 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          {/* Dark Web Monitoring */}
           <Card>
             <CardHeader>
               <CardTitle>🌐 Dark Web Monitoring</CardTitle>
@@ -95,7 +89,6 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          {/* Keywords Alert */}
           <Card>
             <CardHeader>
               <CardTitle>🔍 Keywords Alert</CardTitle>
@@ -109,7 +102,6 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          {/* Threat Propagation Map */}
           <Card className="md:col-span-2">
             <CardHeader>
               <CardTitle>🗺️ Propagation Overlay</CardTitle>

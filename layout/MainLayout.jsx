@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import SourceToggle from '@/components/SourceToggle';
 
 export default function MainLayout({ children }) {
   const [darkMode, setDarkMode] = useState(false);
@@ -29,31 +30,24 @@ export default function MainLayout({ children }) {
   };
 
   const handleLogout = () => {
-    // Placeholder for real auth logic
     router.push('/');
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 text-black dark:text-white transition-colors">
-      <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-6 py-4 bg-white dark:bg-gray-900 shadow-md gap-2 sm:gap-4">
-        <h1 className="text-2xl font-bold">CrisisWatch</h1>
-        <nav className="flex flex-wrap items-center gap-4 text-sm">
-          <Link href="/dashboard" className="hover:underline">Dashboard</Link>
-          <Link href="/settings" className="hover:underline">Settings</Link>
-          <Link href="/darkweb" className="hover:underline">Dark Web</Link>
-          <select
-            className="bg-transparent border border-gray-400 dark:border-gray-600 rounded px-2 py-1 text-black dark:text-white dark:bg-gray-800"
-            defaultValue="Hybrid"
-          >
-            <option>Hybrid</option>
-          </select>
-          <button onClick={toggleDarkMode} className="hover:underline">
-            {darkMode ? 'Light Mode' : 'Dark Mode'}
-          </button>
-          <button onClick={handleLogout} className="hover:underline">
-            Logout
-          </button>
+    <div className="min-h-screen bg-white dark:bg-gray-900 dark:text-white transition-colors">
+      <header className="flex flex-wrap items-center justify-between px-4 py-3 bg-white dark:bg-gray-900 shadow-md">
+        <h1 className="text-2xl font-bold text-black dark:text-white">CrisisWatch</h1>
+        <nav className="flex flex-wrap items-center gap-4 text-sm mt-2 sm:mt-0 text-black dark:text-white">
+          <Link href="/dashboard">Dashboard</Link>
+          <Link href="/settings">Settings</Link>
+          <Link href="/darkweb">Dark Web</Link>
+          <SourceToggle />
+          <button onClick={toggleDarkMode}>Light Mode</button>
+          <button onClick={handleLogout}>Logout</button>
         </nav>
       </header>
 
-      <main className="p-8 max-w-7xl mx-auto">{children
+      <main className="p-8 max-w-7xl mx-auto">{children}</main>
+    </div>
+  );
+}

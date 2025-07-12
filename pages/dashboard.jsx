@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import FeedList from '../components/FeedList';
 import Sidebar from '../components/Sidebar';
+import ThreatScorer from '@/components/ThreatScorer'; // adjust path if needed
 import {
   Card,
   CardHeader,

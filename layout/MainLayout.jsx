@@ -37,30 +37,20 @@ export default function MainLayout({ children }) {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 dark:text-white transition-colors">
-      <header className="bg-gray-100 dark:bg-gray-800 p-4 flex justify-between items-center shadow">
-        <h1 className="text-xl font-bold">CrisisWatch</h1>
+      <<header className="flex items-center justify-between px-4 py-2 bg-white dark:bg-gray-900 shadow-md">
+  <h1 className="text-xl font-bold text-black dark:text-white">CrisisWatch</h1>
 
-        <nav className="space-x-4 flex items-center">
-          <Link href="/" className="hover:underline">Dashboard</Link>
-          <Link href="/settings" className="hover:underline">Settings</Link>
-          <Link href="/darkweb" className="hover:underline">Dark Web</Link>
-          <SourceToggle mode={mode} setMode={setMode} />
-
-          <button
-            onClick={toggleDarkMode}
-            className="bg-purple-600 text-white px-3 py-1 rounded"
-          >
-            {darkMode ? 'Light Mode' : 'Dark Mode'}
-          </button>
-
-          <button
-            onClick={handleLogout}
-            className="text-sm text-gray-600 dark:text-gray-300 hover:underline"
-          >
-            Logout
-          </button>
-        </nav>
-      </header>
+  <nav className="flex items-center space-x-4 text-sm text-black dark:text-white">
+    <a href="/dashboard">Dashboard</a>
+    <a href="/settings">Settings</a>
+    <a href="/darkweb">Dark Web</a>
+    <select className="bg-transparent dark:bg-gray-800 border border-gray-600 rounded px-2 py-1 text-white">
+      <option>Hybrid</option>
+    </select>
+    <button onClick={toggleTheme}>Light Mode</button>
+    <a href="/logout">Logout</a>
+  </nav>
+</header>
 
       <main className="p-4">{children}</main>
     </div>

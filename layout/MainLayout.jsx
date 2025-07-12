@@ -7,6 +7,7 @@ import SourceToggle from '@/components/SourceToggle';
 
 export default function MainLayout({ children }) {
   const [darkMode, setDarkMode] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -35,19 +36,21 @@ export default function MainLayout({ children }) {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 dark:text-white transition-colors">
-      <header className="flex flex-wrap items-center justify-between px-4 py-3 bg-white dark:bg-gray-900 shadow-md">
-        <h1 className="text-2xl font-bold text-black dark:text-white">CrisisWatch</h1>
-        <nav className="flex flex-wrap items-center gap-4 text-sm mt-2 sm:mt-0 text-black dark:text-white">
-          <Link href="/dashboard">Dashboard</Link>
-          <Link href="/settings">Settings</Link>
-          <Link href="/darkweb">Dark Web</Link>
-          <SourceToggle />
-          <button onClick={toggleDarkMode}>Light Mode</button>
-          <button onClick={handleLogout}>Logout</button>
-        </nav>
-      </header>
-
-      <main className="p-8 max-w-7xl mx-auto">{children}</main>
-    </div>
-  );
-}
+      <header className="bg-white dark:bg-gray-900 shadow-md px-4 py-3">
+        <div className="flex items-center justify-between max-w-7xl mx-auto">
+          <h1 className="text-2xl font-bold text-black dark:text-white">CrisisWatch</h1>
+          <button
+            className="md:hidden text-black dark:text-white"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            ☰
+          </button>
+          <nav className="hidden md:flex gap-4 text-sm text-black dark:text-white">
+            <Link href="/dashboard">Dashboard</Link>
+            <Link href="/settings">Settings</Link>
+            <Link href="/darkweb">Dark Web</Link>
+            <SourceToggle />
+            <button onClick={toggleDarkMode}>Light Mode</button>
+            <button onClick={handleLogout}>Logout</button>
+          </nav>
+        </div>

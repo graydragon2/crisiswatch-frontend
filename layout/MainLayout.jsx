@@ -10,7 +10,6 @@ export default function MainLayout({ children }) {
   const [mode, setMode] = useState('Hybrid');
   const router = useRouter();
 
-  // Load dark mode preference from localStorage
   useEffect(() => {
     const saved = localStorage.getItem('theme');
     if (saved === 'dark') {
@@ -32,7 +31,6 @@ export default function MainLayout({ children }) {
   };
 
   const handleLogout = () => {
-    // Placeholder for future auth
     router.push('/');
   };
 
@@ -41,4 +39,38 @@ export default function MainLayout({ children }) {
       <header className="flex flex-wrap items-center justify-between px-4 py-3 bg-white dark:bg-gray-900 shadow-md">
         <h1 className="text-2xl font-bold text-black dark:text-white">CrisisWatch</h1>
 
-        <nav className="flex flex-wrap items-center gap-4 text-sm mt-2 sm:
+        <nav className="flex flex-wrap items-center gap-4 text-sm mt-2 sm:mt-0 text-black dark:text-white">
+          <Link href="/dashboard" className="hover:underline">Dashboard</Link>
+          <Link href="/settings" className="hover:underline">Settings</Link>
+          <Link href="/darkweb" className="hover:underline">Dark Web</Link>
+
+          <select
+            value={mode}
+            onChange={(e) => setMode(e.target.value)}
+            className="bg-transparent dark:bg-gray-800 border border-gray-600 rounded px-2 py-1 text-white"
+          >
+            <option>Hybrid</option>
+            <option>RSS Only</option>
+            <option>AI Only</option>
+          </select>
+
+          <button
+            onClick={toggleDarkMode}
+            className="bg-gray-200 dark:bg-gray-700 text-sm px-2 py-1 rounded"
+          >
+            {darkMode ? 'Light Mode' : 'Dark Mode'}
+          </button>
+
+          <button
+            onClick={handleLogout}
+            className="text-red-500 hover:underline"
+          >
+            Logout
+          </button>
+        </nav>
+      </header>
+
+      <main className="max-w-6xl mx-auto p-4">{children}</main>
+    </div>
+  );
+}

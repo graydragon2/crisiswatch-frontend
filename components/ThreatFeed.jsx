@@ -1,31 +1,40 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function ThreatFeed() {
   const [threats, setThreats] = useState([]);
 
   useEffect(() => {
-    const fetchThreats = async () => {
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/threats`);
-        const json = await res.json();
-        setThreats(json.items || []);
-      } catch (err) {
-        console.error('Failed to fetch threats:', err);
-      }
-    };
-    fetchThreats();
+    fetch('/api/threats')
+      .then(res => res.json())
+      .then(data => setThreats(data.items || []));
   }, []);
 
   return (
     <div>
-      <h2 className="text-lg font-semibold mb-2">⚠️ Parsed Threat Headlines</h2>
-      {threats.length === 0 && <p>No threats found.</p>}
-      <ul className="list-disc ml-5">
+      <h2 className="text-lg font-semibold mb-4">🧠 Threat Feed</h2>
+      <ul className="space-y-4">
         {threats.map((item, idx) => (
-          <li key={idx}>
-            <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">
-              {item.title}
-            </a>
+          <li key={idx} className="border rounded-md p-4 shadow-sm bg-muted">
+            <div className="flex flex-col gap-2">
+              <a
+                href={item.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 dark:text-blue-400 font-semibold text-sm hover:underline"
+              >
+                {item.title}
+              </a>
+              {item.pubDate && (
+                <span className="text-xs text-muted-foreground">
+                  {new Date(item.pubDate).toLocaleString()}
+                </span>
+              )}
+              {item.description && (
+                <p className="text-sm text-muted-foreground line-clamp-3">
+                  {item.description}
+                </p>
+              )}
+            </div>
           </li>
         ))}
       </ul>

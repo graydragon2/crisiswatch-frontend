@@ -1,76 +1,29 @@
 'use client';
 
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import SourceToggle from '@/components/SourceToggle';
+import FeedList from '@/components/FeedList'; import { useState, useEffect } from 'react';
 
-export default function MainLayout({ children }) {
-  const [darkMode, setDarkMode] = useState(false);
-  const [mode, setMode] = useState('Hybrid');
-  const router = useRouter();
+export default function DashboardPage() { const [threats, setThreats] = useState([]); const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const saved = localStorage.getItem('theme');
-    if (saved === 'dark') {
-      document.documentElement.classList.add('dark');
-      setDarkMode(true);
-    }
-  }, []);
+useEffect(() => { const fetchThreats = async () => { setLoading(true); try { const res = await fetch('/api/threats'); const json = await res.json(); setThreats(json.items || []); } catch (err) { console.error('Failed to fetch threats:', err); } finally { setLoading(false); } };
 
-  const toggleDarkMode = () => {
-    const newMode = !darkMode;
-    setDarkMode(newMode);
-    if (newMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  };
+fetchThreats();
+const interval = setInterval(fetchThreats, 5 * 60 * 1000);
+return () => clearInterval(interval);
 
-  const handleLogout = () => {
-    router.push('/');
-  };
+}, []);
 
-  return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 dark:text-white transition-colors">
-      <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between px-4 py-4 bg-white dark:bg-gray-900 shadow-md gap-2">
-  <h1 className="text-2xl font-bold text-black dark:text-white">CrisisWatch</h1>
+return ( <div className="p-4 space-y-6 max-w-4xl mx-auto"> <section className="bg-white dark:bg-gray-900 rounded-2xl shadow p-6"> <h1 className="text-2xl font-bold mb-4 text-black dark:text-white">Threat Feed</h1> {loading ? ( <p className="text-gray-500 dark:text-gray-400">Loading...</p> ) : threats.length === 0 ? ( <p className="text-gray-500 dark:text-gray-400">No threats found.</p> ) : ( <ul className="space-y-3"> {threats.map((item, idx) => ( <li key={idx} className="border-b border-gray-300 dark:border-gray-700 pb-2"> <a
+href={item.link}
+target="_blank"
+rel="noopener noreferrer"
+className="text-blue-600 dark:text-blue-400 hover:underline"
+> {item.title} </a> </li> ))} </ul> )} </section>
 
-  <nav className="flex flex-wrap items-center gap-4 text-sm text-black dark:text-white">
-    <Link href="/dashboard" className="hover:underline">Dashboard</Link>
-    <Link href="/settings" className="hover:underline">Settings</Link>
-    <Link href="/darkweb" className="hover:underline">Dark Web</Link>
+<section className="bg-white dark:bg-gray-900 rounded-2xl shadow p-6">
+    <h2 className="text-xl font-semibold mb-4 text-black dark:text-white">📄 Active RSS Feeds</h2>
+    <FeedList />
+  </section>
+</div>
 
-    <select
-      value={mode}
-      onChange={(e) => setMode(e.target.value)}
-      className="bg-transparent border border-gray-600 dark:bg-gray-800 rounded px-2 py-1"
-    >
-      <option>Hybrid</option>
-      <option>RSS Only</option>
-      <option>AI Only</option>
-    </select>
+); }
 
-    <button
-      onClick={toggleDarkMode}
-      className="bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded text-sm"
-    >
-      {darkMode ? 'Light Mode' : 'Dark Mode'}
-    </button>
-
-    <button
-      onClick={handleLogout}
-      className="text-red-500 hover:underline"
-    >
-      Logout
-    </button>
-  </nav>
-</header>
-
-      <main className="max-w-6xl mx-auto p-4">{children}</main>
-    </div>
-  );
-}

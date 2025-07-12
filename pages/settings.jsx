@@ -1,85 +1,75 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 
 export default function SettingsPage() {
   const [feeds, setFeeds] = useState([]);
+  const [newFeed, setNewFeed] = useState('');
   const [keywords, setKeywords] = useState('');
-  const [customFeed, setCustomFeed] = useState('');
-
-  useEffect(() => {
-    fetch('/api/preferences')
-      .then(res => res.json())
-      .then(data => {
-        setFeeds(data.feeds || []);
-        setKeywords(data.keywords || '');
-      });
-  }, []);
-
-  const handleToggleFeed = (url) => {
-    setFeeds(prev =>
-      prev.map(feed =>
-        feed.url === url ? { ...feed, active: !feed.active } : feed
-      )
-    );
-  };
 
   const handleAddFeed = () => {
-    if (customFeed && !feeds.some(f => f.url === customFeed)) {
-      setFeeds([...feeds, { url: customFeed, active: true }]);
-      setCustomFeed('');
+    if (newFeed.trim()) {
+      setFeeds([...feeds, newFeed.trim()]);
+      setNewFeed('');
     }
   };
 
-  const savePreferences = () => {
-    fetch('/api/preferences', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ feeds, keywords })
-    });
+  const handleSave = () => {
+    const preferences = {
+      feeds,
+      keywords: keywords.split(',').map(k => k.trim()),
+    };
+    console.log('Saved preferences:', preferences);
+    // You can add saving logic here
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <h1 className="text-xl font-bold mb-4">RSS Feed Preferences</h1>
+    <div className="max-w-4xl mx-auto p-8 space-y-8">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6">
+        <h2 className="text-2xl font-bold mb-4">RSS Feed Preferences</h2>
 
-      <div className="mb-4">
-        <label className="block font-medium">Keyword Filters (comma separated)</label>
-        <input
-          className="w-full border px-3 py-2 rounded"
-          value={keywords}
-          onChange={e => setKeywords(e.target.value)}
-        />
-      </div>
-
-      <div className="mb-4">
-        <label className="block font-medium">Active Feeds</label>
-        {feeds.map(feed => (
-          <div key={feed.url} className="flex items-center justify-between">
-            <span className="text-sm break-all">{feed.url}</span>
-            <input
-              type="checkbox"
-              checked={feed.active}
-              onChange={() => handleToggleFeed(feed.url)}
-            />
-          </div>
-        ))}
-        <div className="flex mt-2">
+        <div className="mb-4">
+          <label className="block font-semibold mb-1">Keyword Filters (comma separated)</label>
           <input
-            className="flex-1 border px-2 py-1 rounded-l"
-            value={customFeed}
-            onChange={e => setCustomFeed(e.target.value)}
-            placeholder="Add feed URL"
+            type="text"
+            value={keywords}
+            onChange={e => setKeywords(e.target.value)}
+            className="w-full p-2 rounded bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
+            placeholder="e.g. unrest, protest, attack"
           />
-          <button
-            className="bg-blue-600 text-white px-4 py-1 rounded-r"
-            onClick={handleAddFeed}
-          >Add</button>
         </div>
-      </div>
 
-      <button
-        className="bg-green-600 text-white px-4 py-2 rounded"
-        onClick={savePreferences}
-      >Save Preferences</button>
+        <div className="mb-4">
+          <label className="block font-semibold mb-1">Active Feeds</label>
+          <ul className="list-disc ml-5 text-sm mb-2">
+            {feeds.map((feed, idx) => (
+              <li key={idx} className="text-blue-600 dark:text-blue-400">{feed}</li>
+            ))}
+          </ul>
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              value={newFeed}
+              onChange={e => setNewFeed(e.target.value)}
+              placeholder="Add feed URL"
+              className="flex-1 p-2 rounded bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
+            />
+            <button
+              onClick={handleAddFeed}
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Add
+            </button>
+          </div>
+        </div>
+
+        <button
+          onClick={handleSave}
+          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+        >
+          Save Preferences
+        </button>
+      </div>
     </div>
   );
 }

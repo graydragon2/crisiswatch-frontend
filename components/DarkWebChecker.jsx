@@ -20,8 +20,7 @@ export default function DarkWebChecker() {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">Dark Web Monitoring</h1>
+    <div className="p-2">
       <input
         className="w-full border px-3 py-2 rounded mb-4"
         type="email"

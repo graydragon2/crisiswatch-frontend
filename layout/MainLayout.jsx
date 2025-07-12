@@ -1,15 +1,15 @@
 'use client';
 
-import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import SourceToggle from '@/components/SourceToggle';
 
 export default function MainLayout({ children }) {
   const [darkMode, setDarkMode] = useState(false);
   const router = useRouter();
 
-  // ✅ Fix: Properly closed useEffect block
+  // Load theme from localStorage
   useEffect(() => {
     const saved = localStorage.getItem('theme');
     if (saved === 'dark') {
@@ -31,9 +31,35 @@ export default function MainLayout({ children }) {
   };
 
   const handleLogout = () => {
+    // Placeholder for future auth
     router.push('/');
   };
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 text-black dark:text-white">
-      <header className="flex flex-wrap items-center justify-between px-6 py-
+      <header className="flex justify-between items-center px-8 py-4 bg-white dark:bg-gray-900 shadow-md">
+        <h1 className="text-2xl font-bold">CrisisWatch</h1>
+        <nav className="flex items-center gap-6 text-sm">
+          <Link href="/dashboard" className="hover:underline">Dashboard</Link>
+          <Link href="/settings" className="hover:underline">Settings</Link>
+          <Link href="/darkweb" className="hover:underline">Dark Web</Link>
+          <SourceToggle />
+          <button
+            onClick={toggleDarkMode}
+            className="px-3 py-1 border rounded hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            {darkMode ? 'Light Mode' : 'Dark Mode'}
+          </button>
+          <button
+            onClick={handleLogout}
+            className="px-3 py-1 border border-red-500 text-red-500 rounded hover:bg-red-100 dark:hover:bg-red-900"
+          >
+            Logout
+          </button>
+        </nav>
+      </header>
+
+      <main className="p-8 max-w-7xl mx-auto">{children}</main>
+    </div>
+  );
+}

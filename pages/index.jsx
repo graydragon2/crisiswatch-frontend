@@ -1,17 +1,6 @@
 import FeedList from '@/components/FeedList';
 import { useState, useEffect } from 'react';
 
-if (
-  localStorage.theme === 'dark' ||
-  (!('theme' in localStorage) &&
-    window.matchMedia('(prefers-color-scheme: dark)').matches)
-) {
-  document.documentElement.classList.add('dark');
-} else {
-  document.documentElement.classList.remove('dark');
-}
-
-
 export default function DashboardPage() {
   const [threats, setThreats] = useState([]);
   const [loading, setLoading] = useState(true);

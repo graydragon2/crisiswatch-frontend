@@ -41,11 +41,12 @@ export default function Dashboard() {
           ) : (
             <ul className="space-y-3">
               {threats.map((item, idx) => (
-                <li key={idx} className="border-b border-gray-300 dark:border-gray-700 pb-2">
-                  <a
-                    href={item.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-700 dark:text-blue-400 hover:underline"
-                  >
-                    {item.title}
+  <li key={idx} className="border-b border-gray-300 dark:border-gray-700 pb-2">
+    <a
+      href={item.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-blue-700 dark:text-blue-400 hover:underline"
+    >
+      {item.title}
+    </a>

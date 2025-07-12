@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import FeedList from '../components/FeedList';
 import Sidebar from '../components/Sidebar';
+import DarkWebChecker from '@/components/DarkWebChecker';
 import {
   Card,
   CardHeader,

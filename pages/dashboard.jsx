@@ -102,7 +102,14 @@ export default function Dashboard() {
               </ul>
             </CardContent>
           </Card>
-
+          <Card>
+           <CardHeader>
+             <CardTitle>🤖 Threat Scoring AI</CardTitle>
+           </CardHeader>
+           <CardContent>
+           <ThreatScorer />
+          </CardContent>
+          </Card>
           <Card className="md:col-span-2">
             <CardHeader>
               <CardTitle>🗺️ Propagation Overlay</CardTitle>

@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import SourceToggle from '@/components/SourceToggle';
 
 export default function MainLayout({ children }) {
   const [darkMode, setDarkMode] = useState(false);
@@ -18,9 +17,9 @@ export default function MainLayout({ children }) {
   }, []);
 
   const toggleDarkMode = () => {
-    const enabled = !darkMode;
-    setDarkMode(enabled);
-    if (enabled) {
+    const newMode = !darkMode;
+    setDarkMode(newMode);
+    if (newMode) {
       document.documentElement.classList.add('dark');
       localStorage.setItem('theme', 'dark');
     } else {
@@ -30,41 +29,31 @@ export default function MainLayout({ children }) {
   };
 
   const handleLogout = () => {
+    // Placeholder for real auth logic
     router.push('/');
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-950 text-black dark:text-white transition-colors">
-      {/* HEADER */}
-      <header className="sticky top-0 z-50 bg-white dark:bg-gray-900 shadow-md">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <h1 className="text-2xl font-bold">CrisisWatch</h1>
-          <nav className="flex items-center gap-6 text-sm">
-            <Link href="/dashboard" className="hover:underline">
-              Dashboard
-            </Link>
-            <Link href="/settings" className="hover:underline">
-              Settings
-            </Link>
-            <Link href="/darkweb" className="hover:underline">
-              Dark Web
-            </Link>
-            <SourceToggle />
-            <button
-              onClick={toggleDarkMode}
-              className="px-2 py-1 rounded border border-gray-500 dark:border-gray-300 text-xs"
-            >
-              {darkMode ? 'Light Mode' : 'Dark Mode'}
-            </button>
-            <button onClick={handleLogout} className="text-red-500 hover:underline">
-              Logout
-            </button>
-          </nav>
-        </div>
+    <div className="min-h-screen bg-white dark:bg-gray-900 text-black dark:text-white transition-colors">
+      <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-6 py-4 bg-white dark:bg-gray-900 shadow-md gap-2 sm:gap-4">
+        <h1 className="text-2xl font-bold">CrisisWatch</h1>
+        <nav className="flex flex-wrap items-center gap-4 text-sm">
+          <Link href="/dashboard" className="hover:underline">Dashboard</Link>
+          <Link href="/settings" className="hover:underline">Settings</Link>
+          <Link href="/darkweb" className="hover:underline">Dark Web</Link>
+          <select
+            className="bg-transparent border border-gray-400 dark:border-gray-600 rounded px-2 py-1 text-black dark:text-white dark:bg-gray-800"
+            defaultValue="Hybrid"
+          >
+            <option>Hybrid</option>
+          </select>
+          <button onClick={toggleDarkMode} className="hover:underline">
+            {darkMode ? 'Light Mode' : 'Dark Mode'}
+          </button>
+          <button onClick={handleLogout} className="hover:underline">
+            Logout
+          </button>
+        </nav>
       </header>
 
-      {/* MAIN CONTENT */}
-      <main className="px-6 py-8 max-w-7xl mx-auto">{children}</main>
-    </div>
-  );
-}
+      <main className="p-8 max-w-7xl mx-auto">{children

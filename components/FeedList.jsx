@@ -13,7 +13,7 @@ export default function FeedList() {
 
   const fetchFeeds = async () => {
     try {
-      const res = await fetch('/api/feeds');
+      const res = await fetch('/api/data/feeds');
       const json = await res.json();
       setFeeds(json.feeds || []);
     } catch (err) {
@@ -25,7 +25,7 @@ export default function FeedList() {
   const addFeed = async () => {
     if (!newFeed.trim()) return;
     try {
-      const res = await fetch('/api/feeds', {
+      const res = await fetch('/api/data/feeds', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: newFeed })

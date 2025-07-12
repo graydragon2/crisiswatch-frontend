@@ -37,20 +37,25 @@ export default function DarkWebChecker() {
       </button>
 
       {result && (
-        <div className="mt-4 bg-gray-100 p-4 rounded">
-          {result.error ? (
-            <p className="text-red-600">{result.error}</p>
-          ) : result.breaches?.length ? (
+        <div className="mt-4 bg-gray-100 p-4 rounded text-sm">
+          {result.error || result.success === false ? (
+            <p className="text-red-600">{result.error || 'No breaches found.'}</p>
+          ) : (
             <>
-              <p className="font-semibold text-red-600">Breaches Found: {result.breaches.length}</p>
-              <ul className="mt-2 list-disc ml-5">
-                {result.breaches.map((b, i) => (
-                  <li key={i}><strong>{b.Name}</strong> – {b.Description}</li>
+              <p className="font-semibold text-red-600">
+                Breaches Found: {result.sources?.length || 0}
+              </p>
+
+              <p className="text-gray-700 mt-2">Exposed Fields: {result.fields?.join(', ')}</p>
+
+              <ul className="mt-2 list-disc ml-5 max-h-40 overflow-auto">
+                {result.sources?.map((src, i) => (
+                  <li key={i}>
+                    <strong>{src.name}</strong> — {src.date || 'Date unknown'}
+                  </li>
                 ))}
               </ul>
             </>
-          ) : (
-            <p className="text-green-600">No breaches found 🎉</p>
           )}
         </div>
       )}

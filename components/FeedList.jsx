@@ -11,7 +11,7 @@ export default function FeedList() {
 
   const fetchFeeds = async () => {
     try {
-      const res = await fetch('/api/feeds'); // ✅ Use relative path
+      const res = await fetch('/api/feeds');
       const json = await res.json();
       setFeeds(json.feeds || []);
     } catch (err) {
@@ -23,7 +23,7 @@ export default function FeedList() {
   const addFeed = async () => {
     if (!newFeed) return;
     try {
-      const res = await fetch('/api/feeds', { // ✅ Use relative path
+      const res = await fetch('/api/feeds', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: newFeed })
@@ -46,5 +46,18 @@ export default function FeedList() {
         placeholder="Enter feed URL"
         className="border rounded p-1 w-4/5 mr-2 text-black"
       />
-      <button onClick={addFeed} className="px-3 py-1 bg-blue-600 text-white rounded">Add</button>
-      {error && <p className
+      <button
+        onClick={addFeed}
+        className="px-3 py-1 bg-blue-600 text-white rounded"
+      >
+        Add
+      </button>
+      {error && <p className="text-red-500 mt-2">{error}</p>}
+      <ul className="list-disc ml-5 mt-3 text-black dark:text-white">
+        {feeds.map((feed, idx) => (
+          <li key={idx}>{feed.url || feed}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}

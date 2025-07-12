@@ -1,5 +1,5 @@
 'use client';
-
+import DarkWebChecker from '@/components/DarkWebChecker';
 import { useState, useEffect } from 'react';
 import FeedList from '../components/FeedList';
 import Sidebar from '../components/Sidebar';

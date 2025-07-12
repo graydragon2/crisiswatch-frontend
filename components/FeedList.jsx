@@ -65,7 +65,7 @@ export default function FeedList() {
         <ul className="space-y-2">
           {feeds.map((feed, idx) => (
             <li key={idx} className="text-sm">
-              📡 <a href={feed.url} target="_blank" rel="noopener noreferrer" className="hover:underline text-blue-400">{feed.url}</a>
+              📡 <a href={feed.link} target="_blank" rel="noopener noreferrer" className="hover:underline text-blue-400">{feed.title}</a>
             </li>
           ))}
         </ul>

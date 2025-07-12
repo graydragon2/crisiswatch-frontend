@@ -46,22 +46,21 @@ export default function SettingsPage() {
               <li key={idx} className="text-blue-600 dark:text-blue-400">{feed}</li>
             ))}
           </ul>
-          <div className="flex items-center gap-2">
-            <input
-              type="text"
-              value={newFeed}
-              onChange={e => setNewFeed(e.target.value)}
-              placeholder="Add feed URL"
-              className="flex-1 p-2 rounded bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
-            />
-            <button
-              onClick={handleAddFeed}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-            >
-              Add
-            </button>
-          </div>
-        </div>
+          <div className="flex gap-3 items-center mt-2">
+  <input
+    type="text"
+    value={newFeed}
+    onChange={e => setNewFeed(e.target.value)}
+    placeholder="Add feed URL"
+    className="flex-1 p-2 rounded bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
+  />
+  <button
+    onClick={handleAddFeed}
+    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+  >
+    Add
+  </button>
+</div>
 
         <button
           onClick={handleSave}

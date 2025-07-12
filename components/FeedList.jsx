@@ -11,7 +11,7 @@ export default function FeedList() {
 
   const fetchFeeds = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/feeds`);
+      const res = await fetch('/api/feeds'); // ✅ Use relative path
       const json = await res.json();
       setFeeds(json.feeds || []);
     } catch (err) {
@@ -23,7 +23,7 @@ export default function FeedList() {
   const addFeed = async () => {
     if (!newFeed) return;
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/feeds`, {
+      const res = await fetch('/api/feeds', { // ✅ Use relative path
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: newFeed })
@@ -47,12 +47,4 @@ export default function FeedList() {
         className="border rounded p-1 w-4/5 mr-2 text-black"
       />
       <button onClick={addFeed} className="px-3 py-1 bg-blue-600 text-white rounded">Add</button>
-      {error && <p className="text-red-500 mt-2">{error}</p>}
-      <ul className="list-disc ml-5 mt-3">
-        {feeds.map((feed, idx) => (
-          <li key={idx}>{feed.url || feed}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
+      {error && <p className

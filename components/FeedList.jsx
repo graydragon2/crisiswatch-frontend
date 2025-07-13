@@ -1,5 +1,4 @@
-'use client';
-
+// /components/FeedList.jsx
 import { useState, useEffect } from 'react';
 
 export default function FeedList() {
@@ -13,7 +12,7 @@ export default function FeedList() {
 
   const fetchFeeds = async () => {
     try {
-      const res = await fetch('/api/data/feeds');
+      const res = await fetch('/api/feeds');
       const json = await res.json();
       setFeeds(json.feeds || []);
     } catch (err) {
@@ -23,9 +22,9 @@ export default function FeedList() {
   };
 
   const addFeed = async () => {
-    if (!newFeed.trim()) return;
+    if (!newFeed) return;
     try {
-      const res = await fetch('/api/data/feeds', {
+      const res = await fetch('/api/feeds', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: newFeed })
@@ -35,41 +34,56 @@ export default function FeedList() {
       fetchFeeds();
     } catch (err) {
       console.error(err);
-      setError('Failed to add feed.');
+      setError('Could not add feed.');
+    }
+  };
+
+  const removeFeed = async (url) => {
+    try {
+      const res = await fetch('/api/feeds', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url })
+      });
+      if (!res.ok) throw new Error('Failed to delete feed');
+      fetchFeeds();
+    } catch (err) {
+      console.error(err);
+      setError('Could not remove feed.');
     }
   };
 
   return (
-    <div className="space-y-4">
+    <div>
+      <ul className="list-disc ml-4 mb-2 text-sm text-gray-800 dark:text-gray-200">
+        {feeds.map((feed, idx) => (
+          <li key={idx} className="flex items-center justify-between">
+            <span className="break-all">{feed}</span>
+            <button
+              onClick={() => removeFeed(feed)}
+              className="ml-2 text-red-600 hover:text-red-800 text-xs"
+            >
+              Remove
+            </button>
+          </li>
+        ))}
+      </ul>
       <div className="flex gap-2">
         <input
           type="text"
-          placeholder="Enter feed URL"
+          placeholder="Add new RSS feed URL"
           value={newFeed}
           onChange={(e) => setNewFeed(e.target.value)}
-          className="flex-1 px-3 py-2 border rounded-md bg-background text-foreground border-border"
+          className="flex-1 p-2 rounded bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
         />
         <button
           onClick={addFeed}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
         >
           Add
         </button>
       </div>
-
-      {error && <p className="text-sm text-red-500">{error}</p>}
-
-      {feeds.length === 0 ? (
-        <p className="text-muted-foreground">No active RSS feeds.</p>
-      ) : (
-        <ul className="space-y-2">
-          {feeds.map((feed, idx) => (
-            <li key={idx} className="text-sm">
-              📡 <a href={feed.link} target="_blank" rel="noopener noreferrer" className="hover:underline text-blue-400">{feed.title}</a>
-            </li>
-          ))}
-        </ul>
-      )}
+      {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
     </div>
   );
 }

@@ -10,7 +10,6 @@ export default function DashboardPage() {
   const [aiScore, setAiScore] = useState(null);
   const [scoring, setScoring] = useState(false);
 
-  // Fetch threats from API
   useEffect(() => {
     const fetchThreats = async () => {
       setLoadingThreats(true);
@@ -30,7 +29,6 @@ export default function DashboardPage() {
     return () => clearInterval(interval);
   }, []);
 
-  // Check dark web
   const checkDarkWeb = async () => {
     if (!query.trim()) return;
     setChecking(true);
@@ -47,7 +45,6 @@ export default function DashboardPage() {
     }
   };
 
-  // AI Threat Scoring
   const scoreThreat = async () => {
     if (!query.trim()) return;
     setScoring(true);

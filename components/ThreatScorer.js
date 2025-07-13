@@ -1,66 +1,67 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-export default function ThreatFeed() { const [threats, setThreats] = useState([]); const [loading, setLoading] = useState(true);
+export default function ThreatScorer() {
+  const [headline, setHeadline] = useState('');
+  const [score, setScore] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-useEffect(() => { fetch(${process.env.NEXT_PUBLIC_BACKEND_URL}/api/threats, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ articles: [] }), }) .then(res => res.json()) .then(result => setThreats(result.threats || [])) .catch(err => console.error('Failed to load threats:', err)) .finally(() => setLoading(false)); }, []);
+  const handleScore = async () => {
+    if (!headline.trim()) return;
 
-return ( <div> <h2 className="text-lg font-semibold mb-4">🧠 Threat Feed</h2>
+    setLoading(true);
+    setScore(null);
+    setError('');
 
-{loading ? (
-    <p className="text-sm text-muted-foreground">Loading...</p>
-  ) : (
-    <ul className="space-y-4">
-      {threats.map((item, idx) => (
-        <li key={idx} className="border rounded-md p-4 shadow-sm bg-muted">
-          <div className="flex flex-col gap-2">
-            <a
-              href={item.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 dark:text-blue-400 font-semibold text-sm hover:underline"
-            >
-              {item.title}
-            </a>
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/score`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: headline }),
+      });
 
-            {item.pubDate && (
-              <span className="text-xs text-muted-foreground">
-                {new Date(item.pubDate).toLocaleString()}
-              </span>
-            )}
+      const data = await res.json();
 
-            {item.summary && (
-              <p className="text-sm text-muted-foreground line-clamp-3">
-                {item.summary}
-              </p>
-            )}
+      if (!res.ok || data.error) {
+        setError(data.error || 'Scoring failed');
+      } else if (typeof data.score === 'number') {
+        setScore(data.score);
+      } else {
+        setError('Invalid score returned from API');
+      }
+    } catch (err) {
+      console.error('ThreatScorer error:', err);
+      setError('Server error');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            {typeof item.score === 'number' && (
-              <>
-                <span
-                  className={`w-fit text-xs font-bold px-2 py-1 rounded ${
-                    item.score >= 8
-                      ? 'bg-red-600 text-white'
-                      : item.score >= 4
-                      ? 'bg-yellow-400 text-black'
-                      : 'bg-green-500 text-white'
-                  }`}
-                >
-                  Threat Score: {item.score}
-                </span>
-
-                {item.score >= 8 && (
-                  <div className="text-red-600 font-bold text-xs">
-                    🚨 Critical Threat!
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        </li>
-      ))}
-    </ul>
-  )}
-</div>
-
-); }
-
+  return (
+    <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4">
+      <h2 className="text-lg font-semibold text-black dark:text-white mb-2">AI Threat Scoring</h2>
+      <div className="flex gap-2 mb-2">
+        <input
+          type="text"
+          value={headline}
+          onChange={(e) => setHeadline(e.target.value)}
+          placeholder="Paste headline or alert text"
+          className="flex-1 p-2 rounded bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
+        />
+        <button
+          onClick={handleScore}
+          className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
+        >
+          Score
+        </button>
+      </div>
+      {loading && <p className="text-sm text-gray-400">Scoring...</p>}
+      {error && <p className="text-sm text-red-500">{error}</p>}
+      {typeof score === 'number' && (
+        <p className="text-sm text-green-500">
+          ✅ AI Threat Score: <strong>{score}</strong>/10
+        </p>
+      )}
+    </div>
+  );
+}

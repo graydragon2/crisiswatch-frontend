@@ -3,15 +3,14 @@ import FeedList from '@/components/FeedList';
 
 export default function DashboardPage() {
   const [threats, setThreats] = useState([]);
-  const [threatsLoading, setThreatsLoading] = useState(true);
-
+  const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState('');
   const [result, setResult] = useState(null);
   const [checking, setChecking] = useState(false);
 
   useEffect(() => {
     const fetchThreats = async () => {
-      setThreatsLoading(true);
+      setLoading(true);
       try {
         const res = await fetch('/api/threats');
         const json = await res.json();
@@ -19,7 +18,7 @@ export default function DashboardPage() {
       } catch (err) {
         console.error('Failed to fetch threats:', err);
       } finally {
-        setThreatsLoading(false);
+        setLoading(false);
       }
     };
 
@@ -29,9 +28,11 @@ export default function DashboardPage() {
   }, []);
 
   const checkDarkWeb = async () => {
-    if (!query.trim()) return;
+    if (!query.trim()) {
+      setResult({ error: 'Missing email or API key' });
+      return;
+    }
     setChecking(true);
-    setResult(null);
     try {
       const res = await fetch(`/api/darkweb?email=${encodeURIComponent(query)}`);
       const data = await res.json();
@@ -44,11 +45,11 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="p-6 grid gap-6 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
+    <div className="p-4 space-y-6">
       {/* Threat Feed */}
-      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4 col-span-1 md:col-span-2 xl:col-span-3">
-        <h1 className="text-2xl font-bold mb-4 text-black dark:text-white">Threat Feed</h1>
-        {threatsLoading ? (
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4">
+        <h1 className="text-xl font-bold mb-2 text-black dark:text-white">Threat Feed</h1>
+        {loading ? (
           <p className="text-gray-500 dark:text-gray-400">Loading...</p>
         ) : threats.length === 0 ? (
           <p className="text-gray-500 dark:text-gray-400">No threats found.</p>
@@ -70,32 +71,8 @@ export default function DashboardPage() {
         )}
       </div>
 
-      {/* Threat Scoring AI */}
+      {/* Feed List */}
       <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4">
-        <h2 className="text-lg font-semibold text-black dark:text-white mb-2">Threat Scoring AI</h2>
-        {threatsLoading ? (
-          <p className="text-sm text-gray-400">Scoring threats...</p>
-        ) : threats.length === 0 ? (
-          <p className="text-sm text-gray-400">No threats to score.</p>
-        ) : (
-          <ul className="space-y-2">
-            {threats.map((item, idx) => (
-              <li key={idx} className="border-b border-gray-300 dark:border-gray-700 pb-2">
-                <p className="text-sm text-black dark:text-white font-medium">{item.title}</p>
-                {item.score !== undefined && (
-                  <p className="text-xs text-gray-600 dark:text-gray-300">
-                    AI Threat Score: <span className="font-semibold">{item.score}/10</span>
-                  </p>
-                )}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-
-      {/* RSS Feed Management */}
-      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4">
-        <h2 className="text-lg font-semibold text-black dark:text-white">Manage RSS Feeds</h2>
         <FeedList />
       </div>
 
@@ -107,19 +84,56 @@ export default function DashboardPage() {
 
       {/* Dark Web Monitoring */}
       <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4">
-        <h2 className="text-lg font-semibold text-black dark:text-white mb-2">Dark Web Monitoring</h2>
-
-        <div className="flex gap-2 mb-2">
+        <h2 className="text-lg font-semibold text-black dark:text-white">Dark Web Monitoring</h2>
+        <div className="flex flex-col sm:flex-row items-center gap-2">
           <input
-            type="text"
+            type="email"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Enter email or username"
-            className="flex-1 p-2 rounded bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
+            placeholder="Enter your email"
+            className="w-full sm:w-auto flex-1 px-3 py-2 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-black dark:text-white"
           />
           <button
-  onClick={checkDarkWeb}
-  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
->
-  Check
-</button>
+            onClick={checkDarkWeb}
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            disabled={checking}
+          >
+            {checking ? 'Checking...' : 'Check'}
+          </button>
+        </div>
+        {result && result.error && (
+          <p className="text-red-500 mt-2">{result.error}</p>
+        )}
+        {result && result.breaches && result.breaches.length > 0 && (
+          <ul className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+            {result.breaches.map((breach, i) => (
+              <li key={i}>🛑 {breach}</li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      {/* Threat Scoring (Coming Soon) */}
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4">
+        <h2 className="text-lg font-semibold text-black dark:text-white">Threat Scoring AI</h2>
+        <p className="text-gray-500 dark:text-gray-400">Coming soon: AI scoring for threat relevance and severity.</p>
+      </div>
+
+      {/* Keywords Alert */}
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4">
+        <h2 className="text-lg font-semibold text-black dark:text-white">Keywords Alert</h2>
+        <ul className="list-disc list-inside text-gray-700 dark:text-gray-300">
+          <li>malware</li>
+          <li>ransomware</li>
+          <li>data breach</li>
+        </ul>
+      </div>
+
+      {/* VOACAP Propagation */}
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4">
+        <h2 className="text-lg font-semibold text-black dark:text-white">Propagation Overlay</h2>
+        <p className="text-gray-500 dark:text-gray-400">Map coming soon with VOACAP propagation data.</p>
+      </div>
+    </div>
+  );
+}

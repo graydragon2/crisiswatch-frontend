@@ -15,7 +15,7 @@ export default function ThreatScorer() {
     setError('');
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/threats`) {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/threats`), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ headline })

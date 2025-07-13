@@ -70,7 +70,28 @@ export default function DashboardPage() {
           </ul>
         )}
       </div>
-
+      {/* Threat Scoring AI */}
+<div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4">
+  <h2 className="text-lg font-semibold text-black dark:text-white mb-2">Threat Scoring AI</h2>
+  {loading ? (
+    <p className="text-sm text-gray-400">Scoring threats...</p>
+  ) : threats.length === 0 ? (
+    <p className="text-sm text-gray-400">No threats to score.</p>
+  ) : (
+    <ul className="space-y-2">
+      {threats.map((item, idx) => (
+        <li key={idx} className="border-b border-gray-300 dark:border-gray-700 pb-2">
+          <p className="text-sm text-black dark:text-white font-medium">{item.title}</p>
+          {item.score !== undefined && (
+            <div className="text-xs text-gray-600 dark:text-gray-300">
+              AI Threat Score: <span className="font-semibold">{item.score}/10</span>
+            </div>
+          )}
+        </li>
+      ))}
+    </ul>
+  )}
+</div>
       {/* RSS Feed Management */}
       <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4">
         <h2 className="text-lg font-semibold text-black dark:text-white">Manage RSS Feeds</h2>

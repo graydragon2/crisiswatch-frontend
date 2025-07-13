@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import FeedList from '../components/FeedList';
-import Sidebar from '../components/Sidebar';
+import Sidebar from '../components/sidebar';
 import DarkWebChecker from '../components/DarkWebChecker';
 import {
   Card,

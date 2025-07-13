@@ -5,15 +5,19 @@ export default function ThreatFeed() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/threats`, {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ articles: [] }), // To trigger backend scoring
-})
-      .then(res => res.json())
-      .then(result => setThreats(result.threats || []))
-      .catch(err => console.error('Failed to load threats:', err))
-      .finally(() => setLoading(false));
+    const fetchThreats = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/threats`);
+        const data = await res.json();
+        setThreats(data.items || []);
+      } catch (err) {
+        console.error('Failed to load threats:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchThreats();
   }, []);
 
   return (

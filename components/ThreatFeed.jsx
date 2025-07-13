@@ -11,7 +11,7 @@ export default function ThreatFeed() {
         const data = await res.json();
         setThreats(data.items || []);
       } catch (err) {
-        console.error('Failed to load threats:', err);
+        console.error('Failed to fetch threats:', err);
       } finally {
         setLoading(false);
       }
@@ -21,15 +21,15 @@ export default function ThreatFeed() {
   }, []);
 
   return (
-    <div>
-      <h2 className="text-lg font-semibold mb-4">🧠 Threat Feed</h2>
+    <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4">
+      <h2 className="text-lg font-semibold text-black dark:text-white mb-2">🧠 Threat Feed</h2>
 
       {loading ? (
-        <p className="text-sm text-muted-foreground">Loading...</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">Loading...</p>
       ) : (
         <ul className="space-y-4">
           {threats.map((item, idx) => (
-            <li key={idx} className="border rounded-md p-4 shadow-sm bg-muted">
+            <li key={idx} className="border rounded-md p-4 shadow-sm bg-gray-100 dark:bg-gray-800">
               <div className="flex flex-col gap-2">
                 <a
                   href={item.link}
@@ -41,13 +41,13 @@ export default function ThreatFeed() {
                 </a>
 
                 {item.pubDate && (
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
                     {new Date(item.pubDate).toLocaleString()}
                   </span>
                 )}
 
                 {item.summary && (
-                  <p className="text-sm text-muted-foreground line-clamp-3">
+                  <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-3">
                     {item.summary}
                   </p>
                 )}

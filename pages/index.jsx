@@ -29,13 +29,17 @@ export default function DashboardPage() {
   }, []);
 
   const checkDarkWeb = async () => {
-    if (!query.trim()) return;
-    setChecking(true);
-    setResult(null);
+  if (!query.trim()) return;
+  setChecking(true);
+  setResult(null);
 
-    try {
-      const res = await fetch(`/api/darkweb?query=${encodeURIComponent(query)}`);
-      const data = await res.json();
-      setResult(data);
-    } catch (err) {
-      setResult({ error: 'Error checking dark web' });
+  try {
+    const res = await fetch(`/api/darkweb?query=${encodeURIComponent(query)}`);
+    const data = await res.json();
+    setResult(data);
+  } catch (err) {
+    setResult({ error: 'Error checking dark web' });
+  } finally {
+    setChecking(false);
+  }
+}; // ✅ THIS CLOSING BRACE IS REQUIRED

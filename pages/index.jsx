@@ -42,4 +42,4 @@ export default function DashboardPage() {
   } finally {
     setChecking(false);
   }
-}; // ✅ THIS CLOSING BRACE IS REQUIRED
+};

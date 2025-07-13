@@ -1,5 +1,6 @@
-// /components/FeedList.jsx
 import { useState, useEffect } from 'react';
+
+const BACKEND_URL = 'crisiswatch-api-production.up.railway.app'; // Replace with your actual backend URL
 
 export default function FeedList() {
   const [feeds, setFeeds] = useState([]);
@@ -12,7 +13,7 @@ export default function FeedList() {
 
   const fetchFeeds = async () => {
     try {
-      const res = await fetch('/api/feeds');
+      const res = await fetch(`${BACKEND_URL}/api/feeds`);
       const json = await res.json();
       setFeeds(json.feeds || []);
     } catch (err) {
@@ -24,56 +25,28 @@ export default function FeedList() {
   const addFeed = async () => {
     if (!newFeed) return;
     try {
-      const res = await fetch('/api/feeds', {
+      const res = await fetch(`${BACKEND_URL}/api/feeds`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: newFeed })
+        body: JSON.stringify({ url: newFeed }),
       });
       if (!res.ok) throw new Error('Failed to add feed');
       setNewFeed('');
       fetchFeeds();
     } catch (err) {
       console.error(err);
-      setError('Could not add feed.');
-    }
-  };
-
-  const removeFeed = async (url) => {
-    try {
-      const res = await fetch('/api/feeds', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url })
-      });
-      if (!res.ok) throw new Error('Failed to delete feed');
-      fetchFeeds();
-    } catch (err) {
-      console.error(err);
-      setError('Could not remove feed.');
+      setError('Error adding feed.');
     }
   };
 
   return (
-    <div>
-      <ul className="list-disc ml-4 mb-2 text-sm text-gray-800 dark:text-gray-200">
-        {feeds.map((feed, idx) => (
-          <li key={idx} className="flex items-center justify-between">
-            <span className="break-all">{feed}</span>
-            <button
-              onClick={() => removeFeed(feed)}
-              className="ml-2 text-red-600 hover:text-red-800 text-xs"
-            >
-              Remove
-            </button>
-          </li>
-        ))}
-      </ul>
+    <div className="space-y-2">
       <div className="flex gap-2">
         <input
           type="text"
-          placeholder="Add new RSS feed URL"
           value={newFeed}
           onChange={(e) => setNewFeed(e.target.value)}
+          placeholder="Add new RSS feed URL"
           className="flex-1 p-2 rounded bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
         />
         <button
@@ -83,7 +56,12 @@ export default function FeedList() {
           Add
         </button>
       </div>
-      {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
+      {error && <p className="text-red-500 text-sm">{error}</p>}
+      <ul className="list-disc ml-5 text-sm text-black dark:text-white">
+        {feeds.map((feed, idx) => (
+          <li key={idx}>{feed.title}</li>
+        ))}
+      </ul>
     </div>
   );
 }

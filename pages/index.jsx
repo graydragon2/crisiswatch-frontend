@@ -25,9 +25,10 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="p-4 space-y-6">
-      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4">
-        <h1 className="text-xl font-bold mb-2 text-black dark:text-white">Threat Feed</h1>
+    <div className="p-6 grid gap-6 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
+      {/* Threat Feed */}
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4 col-span-1 md:col-span-2 xl:col-span-3">
+        <h1 className="text-2xl font-bold mb-4 text-black dark:text-white">Threat Feed</h1>
         {loading ? (
           <p className="text-gray-500 dark:text-gray-400">Loading...</p>
         ) : threats.length === 0 ? (
@@ -50,8 +51,39 @@ export default function DashboardPage() {
         )}
       </div>
 
+      {/* RSS Feed Management */}
       <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4">
+        <h2 className="text-lg font-semibold text-black dark:text-white">Manage RSS Feeds</h2>
         <FeedList />
+      </div>
+
+      {/* Phishing Detection (placeholder) */}
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4">
+        <h2 className="text-lg font-semibold text-black dark:text-white">Phishing Detection</h2>
+        <p className="text-gray-500 dark:text-gray-400">Coming soon: real-time graph of phishing attempts.</p>
+      </div>
+
+      {/* Dark Web Monitoring (placeholder) */}
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4">
+        <h2 className="text-lg font-semibold text-black dark:text-white">Dark Web Monitoring</h2>
+        <p className="text-gray-500 dark:text-gray-400">No compromised credentials found.</p>
+      </div>
+
+      {/* Keywords Alert */}
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4">
+        <h2 className="text-lg font-semibold text-black dark:text-white">Keywords Alert</h2>
+        <ul className="list-disc list-inside text-sm text-gray-700 dark:text-gray-300">
+          <li>malware</li>
+          <li>ransomware</li>
+          <li>data breach</li>
+        </ul>
+      </div>
+
+      {/* Propagation Overlay Map (placeholder) */}
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4 col-span-1 md:col-span-2">
+        <h2 className="text-lg font-semibold text-black dark:text-white">Propagation Overlay</h2>
+        <p className="text-gray-500 dark:text-gray-400">Map coming soon with VOACAP propagation data.</p>
+        <div className="mt-4 w-full h-48 bg-gray-200 dark:bg-gray-800 rounded-lg animate-pulse" />
       </div>
     </div>
   );

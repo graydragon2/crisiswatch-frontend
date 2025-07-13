@@ -118,5 +118,8 @@ export default function DashboardPage() {
             className="flex-1 p-2 rounded bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
           />
           <button
-            onClick={checkDarkWeb}
-            className="px-
+  onClick={checkDarkWeb}
+  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+>
+  Check
+</button>

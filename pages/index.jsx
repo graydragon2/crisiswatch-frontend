@@ -63,11 +63,40 @@ export default function DashboardPage() {
         <p className="text-gray-500 dark:text-gray-400">Coming soon: real-time graph of phishing attempts.</p>
       </div>
 
-      {/* Dark Web Monitoring (placeholder) */}
-      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4">
-        <h2 className="text-lg font-semibold text-black dark:text-white">Dark Web Monitoring</h2>
-        <p className="text-gray-500 dark:text-gray-400">No compromised credentials found.</p>
-      </div>
+      {/* Dark Web Monitoring (functional) */}
+<div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4">
+  <h2 className="text-lg font-semibold text-black dark:text-white mb-2">Dark Web Monitoring</h2>
+  
+  <div className="flex gap-2 mb-2">
+    <input
+      type="text"
+      value={query}
+      onChange={(e) => setQuery(e.target.value)}
+      placeholder="Enter email or username"
+      className="flex-1 p-2 rounded bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
+    />
+    <button
+      onClick={checkDarkWeb}
+      className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+    >
+      Check
+    </button>
+  </div>
+
+  {loading && <p className="text-sm text-gray-400">Checking...</p>}
+  {result?.error && <p className="text-sm text-red-500">{result.error}</p>}
+  {result?.found === false && <p className="text-sm text-green-500">✅ No compromised credentials found.</p>}
+  {result?.found === true && (
+    <div className="text-sm text-red-500">
+      <p>⚠️ Compromised credentials found:</p>
+      <ul className="list-disc ml-5 mt-2">
+        {result.entries?.map((item, idx) => (
+          <li key={idx}>{item}</li>
+        ))}
+      </ul>
+    </div>
+  )}
+</div>
 
       {/* Keywords Alert */}
       <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4">

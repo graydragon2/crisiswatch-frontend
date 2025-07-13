@@ -1,14 +1,17 @@
-// /pages/api/score.js
 export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
   const { text } = req.body;
   const apiKey = process.env.OPENAI_API_KEY;
 
   if (!text || !apiKey) {
-    return res.status(400).json({ error: 'Missing text or API key' });
+    return res.status(400).json({ error: 'Missing input text or API key' });
   }
 
   try {
-    const completion = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -19,29 +22,26 @@ export default async function handler(req, res) {
         messages: [
           {
             role: 'system',
-            content: 'You are a cybersecurity AI that scores threats from 1 (low) to 10 (high) based on severity and urgency.',
+            content:
+              'You are a cybersecurity analyst. Score the threat level of this message on a scale from 1 (very low) to 10 (extreme threat). Return only the number.',
           },
-          {
-            role: 'user',
-            content: `Score this alert for threat level (1–10): "${text}"`,
-          },
+          { role: 'user', content: text },
         ],
-        temperature: 0.3,
       }),
     });
 
-    const data = await completion.json();
-    const responseText = data.choices?.[0]?.message?.content || '';
-    const match = responseText.match(/(\d+)/); // Extract score
-    const score = match ? parseInt(match[1]) : null;
+    const data = await response.json();
+    const result = data.choices?.[0]?.message?.content.trim();
 
-    if (!score) {
-      return res.status(422).json({ error: 'Unable to extract score' });
+    const score = parseInt(result, 10);
+
+    if (isNaN(score)) {
+      throw new Error('Invalid score returned from AI');
     }
 
     res.status(200).json({ score });
   } catch (error) {
     console.error('AI scoring error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Failed to score threat' });
   }
 }

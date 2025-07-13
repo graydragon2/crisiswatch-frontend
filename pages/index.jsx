@@ -15,7 +15,7 @@ return () => clearInterval(interval);
 const checkDarkWeb = async () => { if (!query.trim()) return; setChecking(true); setResult(null);
 
 try {
-  const res = await fetch(`${BACKEND_URL}/api/darkweb?email=${encodeURIComponent(query)}`);
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/threats`);
   const data = await res.json();
   setResult(data);
 } catch (err) {

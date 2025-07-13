@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-white text-black dark:bg-gray-900 dark:text-white transition-colors duration-200;
+}
+input,
+textarea,
+select {
+  background-color: white;
+  color: black;
+}
+
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: #1f2937; /* Tailwind gray-800 */
+  color: white;
+}

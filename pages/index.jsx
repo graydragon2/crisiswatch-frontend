@@ -1,18 +1,19 @@
-import FeedList from '@/components/FeedList';
 import { useState, useEffect } from 'react';
+import FeedList from '@/components/FeedList';
 
 export default function DashboardPage() {
   const [threats, setThreats] = useState([]);
-  const [threatLoading, setThreatLoading] = useState(true);
-
+  const [loadingThreats, setLoadingThreats] = useState(true);
   const [query, setQuery] = useState('');
-  const [result, setResult] = useState(null);
   const [checking, setChecking] = useState(false);
+  const [result, setResult] = useState(null);
+  const [aiScore, setAiScore] = useState(null);
+  const [scoring, setScoring] = useState(false);
 
-  // Fetch Threats with AI Scores
+  // Fetch threats from API
   useEffect(() => {
     const fetchThreats = async () => {
-      setThreatLoading(true);
+      setLoadingThreats(true);
       try {
         const res = await fetch('/api/threats');
         const json = await res.json();
@@ -20,7 +21,7 @@ export default function DashboardPage() {
       } catch (err) {
         console.error('Failed to fetch threats:', err);
       } finally {
-        setThreatLoading(false);
+        setLoadingThreats(false);
       }
     };
 
@@ -29,7 +30,7 @@ export default function DashboardPage() {
     return () => clearInterval(interval);
   }, []);
 
-  // Dark Web Check Handler
+  // Check dark web
   const checkDarkWeb = async () => {
     if (!query.trim()) return;
     setChecking(true);
@@ -46,43 +47,47 @@ export default function DashboardPage() {
     }
   };
 
+  // AI Threat Scoring
+  const scoreThreat = async () => {
+    if (!query.trim()) return;
+    setScoring(true);
+    setAiScore(null);
+    try {
+      const res = await fetch('/api/score', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: query }),
+      });
+      const data = await res.json();
+      setAiScore(data);
+    } catch (err) {
+      setAiScore({ error: 'Error scoring threat' });
+    } finally {
+      setScoring(false);
+    }
+  };
+
   return (
     <div className="p-6 grid gap-6 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
-      
-      {/* Threat Feed with AI Scoring */}
-      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4 col-span-1 md:col-span-2 xl:col-span-3">
+      {/* Threat Feed */}
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4 col-span-full">
         <h1 className="text-2xl font-bold mb-4 text-black dark:text-white">Threat Feed</h1>
-        {threatLoading ? (
+        {loadingThreats ? (
           <p className="text-gray-500 dark:text-gray-400">Loading...</p>
         ) : threats.length === 0 ? (
           <p className="text-gray-500 dark:text-gray-400">No threats found.</p>
         ) : (
           <ul className="space-y-2">
             {threats.map((item, idx) => (
-              <li
-                key={idx}
-                className="border-b border-gray-300 dark:border-gray-700 pb-2 flex justify-between items-center"
-              >
+              <li key={idx} className="border-b border-gray-300 dark:border-gray-700 pb-2">
                 <a
                   href={item.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
+                  className="text-blue-600 dark:text-blue-400 hover:underline"
                 >
                   {item.title}
                 </a>
-                <span
-                  className={`text-sm font-bold px-2 py-1 rounded ml-4 ${
-                    item.score >= 8
-                      ? 'bg-red-600 text-white'
-                      : item.score >= 5
-                      ? 'bg-yellow-400 text-black'
-                      : 'bg-green-500 text-white'
-                  }`}
-                  title={`Threat Score: ${item.score}`}
-                >
-                  {item.score}
-                </span>
               </li>
             ))}
           </ul>
@@ -93,6 +98,12 @@ export default function DashboardPage() {
       <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4">
         <h2 className="text-lg font-semibold text-black dark:text-white">Manage RSS Feeds</h2>
         <FeedList />
+      </div>
+
+      {/* Phishing Detection */}
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4">
+        <h2 className="text-lg font-semibold text-black dark:text-white">Phishing Detection</h2>
+        <p className="text-gray-500 dark:text-gray-400">Coming soon: real-time graph of phishing attempts.</p>
       </div>
 
       {/* Dark Web Monitoring */}
@@ -115,9 +126,7 @@ export default function DashboardPage() {
         </div>
         {checking && <p className="text-sm text-gray-400">Checking...</p>}
         {result?.error && <p className="text-sm text-red-500">{result.error}</p>}
-        {result?.found === false && (
-          <p className="text-sm text-green-500">✅ No compromised credentials found.</p>
-        )}
+        {result?.found === false && <p className="text-sm text-green-500">✅ No compromised credentials found.</p>}
         {result?.found === true && (
           <div className="text-sm text-red-500">
             <p>⚠️ Compromised credentials found:</p>
@@ -127,6 +136,33 @@ export default function DashboardPage() {
               ))}
             </ul>
           </div>
+        )}
+      </div>
+
+      {/* AI Threat Score */}
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4">
+        <h2 className="text-lg font-semibold text-black dark:text-white mb-2">AI Threat Scoring</h2>
+        <div className="flex gap-2 mb-2">
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Paste headline or alert text"
+            className="flex-1 p-2 rounded bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
+          />
+          <button
+            onClick={scoreThreat}
+            className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
+          >
+            Score
+          </button>
+        </div>
+        {scoring && <p className="text-sm text-gray-400">Scoring...</p>}
+        {aiScore?.error && <p className="text-sm text-red-500">{aiScore.error}</p>}
+        {aiScore?.score && (
+          <p className="text-sm text-green-500">
+            ✅ AI Threat Score: <strong>{aiScore.score}</strong>/10
+          </p>
         )}
       </div>
 
@@ -140,13 +176,7 @@ export default function DashboardPage() {
         </ul>
       </div>
 
-      {/* Phishing Detection Placeholder */}
-      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4">
-        <h2 className="text-lg font-semibold text-black dark:text-white">Phishing Detection</h2>
-        <p className="text-gray-500 dark:text-gray-400">Coming soon: real-time graph of phishing attempts.</p>
-      </div>
-
-      {/* Propagation Overlay Map Placeholder */}
+      {/* Propagation Overlay Map */}
       <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4 col-span-1 md:col-span-2">
         <h2 className="text-lg font-semibold text-black dark:text-white">Propagation Overlay</h2>
         <p className="text-gray-500 dark:text-gray-400">Map coming soon with VOACAP propagation data.</p>

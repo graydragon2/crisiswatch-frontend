@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import '../styles/globals.css';
-import Sidebar from '@/components/Sidebar'; // <-- Add this
+import Sidebar from '@/components/Sidebar';
 
 export default function App({ Component, pageProps }) {
   const [dark, setDark] = useState(true);
@@ -14,11 +14,9 @@ export default function App({ Component, pageProps }) {
 
   return (
     <div className="flex min-h-screen bg-background text-foreground transition-colors">
-      {/* Sidebar */}
       <Sidebar />
-
-      {/* Main content area */}
-      <div className="flex-1 p-4 overflow-y-auto">
+      
+      <main className="flex-1 p-6">
         <div className="flex justify-end mb-4">
           <button
             onClick={() => setDark(!dark)}
@@ -28,7 +26,7 @@ export default function App({ Component, pageProps }) {
           </button>
         </div>
         <Component {...pageProps} />
-      </div>
+      </main>
     </div>
   );
 }

@@ -23,7 +23,25 @@ export default function DashboardPage() {
     const interval = setInterval(fetchThreats, 5 * 60 * 1000);
     return () => clearInterval(interval);
   }, []);
+const [query, setQuery] = useState('');
+const [result, setResult] = useState(null);
+const [loading, setLoading] = useState(false);
 
+const checkDarkWeb = async () => {
+  if (!query.trim()) return;
+  setLoading(true);
+  setResult(null);
+
+  try {
+    const res = await fetch(`/api/darkweb?query=${encodeURIComponent(query)}`);
+    const data = await res.json();
+    setResult(data);
+  } catch (err) {
+    setResult({ error: 'Error checking dark web' });
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <div className="p-6 grid gap-6 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
       {/* Threat Feed */}

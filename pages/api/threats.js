@@ -1,3 +1,4 @@
+// /pages/api/threats.js
 import fs from 'fs';
 import path from 'path';
 import Parser from 'rss-parser';
@@ -8,7 +9,7 @@ const parser = new Parser();
 export default async function handler(req, res) {
   let feeds = [];
 
-  // Load saved feed URLs
+  // Load saved RSS feed URLs
   if (fs.existsSync(feedsFile)) {
     feeds = JSON.parse(fs.readFileSync(feedsFile, 'utf8'));
   }
@@ -31,39 +32,39 @@ export default async function handler(req, res) {
           messages: [
             {
               role: 'system',
-              content: 'Rate this news item for threat level from 0 (safe) to 10 (extreme). Return just the number.',
+              content: 'You are a cybersecurity analyst AI that gives a threat score from 1 to 10 based on severity and urgency of headlines.',
             },
             {
               role: 'user',
-              content: text,
+              content: `Score the threat level of: "${text}". Only return a number from 1 to 10.`,
             },
           ],
         }),
       });
 
-      const data = await response.json();
-      const score = parseFloat(data.choices?.[0]?.message?.content || '0');
-      return isNaN(score) ? 0 : score;
+      const json = await response.json();
+      const match = json.choices?.[0]?.message?.content?.match(/\d+/);
+      return match ? parseInt(match[0]) : null;
     } catch (err) {
-      console.error('AI scoring failed:', err);
-      return 0;
+      console.error('AI scoring error:', err);
+      return null;
     }
   };
 
-  const items = [];
+  try {
+    const allItems = [];
 
-  for (const feedUrl of feeds) {
-    try {
-      const feed = await parser.parseURL(feedUrl);
-      for (const entry of feed.items.slice(0, 5)) {
-        const text = entry.title + ' ' + (entry.contentSnippet || '');
-        const score = await scoreThreat(text);
-        items.push({ title: entry.title, link: entry.link, score });
+    for (const url of feeds) {
+      const feed = await parser.parseURL(url);
+      for (const item of feed.items.slice(0, 5)) {
+        const score = await scoreThreat(item.title);
+        allItems.push({ ...item, score });
       }
-    } catch (err) {
-      console.error(`Error parsing feed ${feedUrl}:`, err);
     }
-  }
 
-  res.status(200).json({ items });
+    res.status(200).json({ items: allItems });
+  } catch (err) {
+    console.error('Feed error:', err);
+    res.status(500).json({ error: 'Failed to load threats' });
+  }
 }

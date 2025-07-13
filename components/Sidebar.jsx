@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { cn } from '@/lib/utils'; // Optional if using class merging
 
 const navItems = [
   { name: 'Dashboard', href: '/dashboard' },

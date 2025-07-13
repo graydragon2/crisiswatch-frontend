@@ -1,22 +1,22 @@
 import { useState, useEffect } from 'react';
 import FeedList from '@/components/FeedList';
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
-
 export default function DashboardPage() {
   const [threats, setThreats] = useState([]);
   const [loadingThreats, setLoadingThreats] = useState(true);
-  const [query, setQuery] = useState('');
+  const [darkWebQuery, setDarkWebQuery] = useState('');
+  const [threatScoreQuery, setThreatScoreQuery] = useState('');
   const [checking, setChecking] = useState(false);
   const [result, setResult] = useState(null);
   const [aiScore, setAiScore] = useState(null);
   const [scoring, setScoring] = useState(false);
 
+  // Fetch threats
   useEffect(() => {
     const fetchThreats = async () => {
       setLoadingThreats(true);
       try {
-        const res = await fetch(`${BACKEND_URL}/api/threats`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/threats`);
         const json = await res.json();
         setThreats(json.items || []);
       } catch (err) {
@@ -31,13 +31,13 @@ export default function DashboardPage() {
     return () => clearInterval(interval);
   }, []);
 
+  // Dark Web Lookup
   const checkDarkWeb = async () => {
-    if (!query.trim()) return;
+    if (!darkWebQuery.trim()) return;
     setChecking(true);
     setResult(null);
-
     try {
-      const res = await fetch(`${BACKEND_URL}/api/darkweb?email=${encodeURIComponent(query)}`);
+      const res = await fetch(`/api/darkweb?query=${encodeURIComponent(darkWebQuery)}`);
       const data = await res.json();
       setResult(data);
     } catch (err) {
@@ -47,16 +47,16 @@ export default function DashboardPage() {
     }
   };
 
+  // AI Threat Scoring
   const scoreThreat = async () => {
-    if (!query.trim()) return;
+    if (!threatScoreQuery.trim()) return;
     setScoring(true);
     setAiScore(null);
-
     try {
-      const res = await fetch(`${BACKEND_URL}/api/score`, {
+      const res = await fetch('/api/score', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: query }),
+        body: JSON.stringify({ text: threatScoreQuery }),
       });
       const data = await res.json();
       setAiScore(data);
@@ -100,20 +100,14 @@ export default function DashboardPage() {
         <FeedList />
       </div>
 
-      {/* Phishing Detection Placeholder */}
-      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4">
-        <h2 className="text-lg font-semibold text-black dark:text-white">Phishing Detection</h2>
-        <p className="text-gray-500 dark:text-gray-400">Coming soon: real-time graph of phishing attempts.</p>
-      </div>
-
       {/* Dark Web Monitoring */}
       <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4">
         <h2 className="text-lg font-semibold text-black dark:text-white mb-2">Dark Web Monitoring</h2>
         <div className="flex gap-2 mb-2">
           <input
             type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            value={darkWebQuery}
+            onChange={(e) => setDarkWebQuery(e.target.value)}
             placeholder="Enter email or username"
             className="flex-1 p-2 rounded bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
           />
@@ -145,8 +139,8 @@ export default function DashboardPage() {
         <div className="flex gap-2 mb-2">
           <input
             type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            value={threatScoreQuery}
+            onChange={(e) => setThreatScoreQuery(e.target.value)}
             placeholder="Paste headline or alert text"
             className="flex-1 p-2 rounded bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
           />
@@ -176,7 +170,7 @@ export default function DashboardPage() {
         </ul>
       </div>
 
-      {/* Propagation Map Placeholder */}
+      {/* Propagation Overlay Map */}
       <div className="bg-white dark:bg-gray-900 rounded-2xl shadow p-4 col-span-1 md:col-span-2">
         <h2 className="text-lg font-semibold text-black dark:text-white">Propagation Overlay</h2>
         <p className="text-gray-500 dark:text-gray-400">Map coming soon with VOACAP propagation data.</p>

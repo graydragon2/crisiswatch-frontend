@@ -1,4 +1,3 @@
-// /pages/api/threats.js
 import fs from 'fs';
 import path from 'path';
 import Parser from 'rss-parser';
@@ -11,14 +10,13 @@ export default async function handler(req, res) {
 
   // Load saved RSS feed URLs
   if (fs.existsSync(feedsFile)) {
-    feeds = JSON.parse(fs.readFileSync(feedsFile, 'utf8'));
+    feeds = JSON.parse(fs.readFileSync(feedsFile, 'utf-8'));
   }
 
   if (!feeds.length) {
     return res.status(400).json({ error: 'No feeds available' });
   }
 
-  // OpenAI threat scoring function
   const scoreThreat = async (text) => {
     try {
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -32,39 +30,41 @@ export default async function handler(req, res) {
           messages: [
             {
               role: 'system',
-              content: 'You are a cybersecurity analyst AI that gives a threat score from 1 to 10 based on severity and urgency of headlines.',
+              content: 'You are a security analyst. Score threat headlines from 1 (low) to 10 (critical). Return only the number.',
             },
-            {
-              role: 'user',
-              content: `Score the threat level of: "${text}". Only return a number from 1 to 10.`,
-            },
+            { role: 'user', content: text },
           ],
         }),
       });
 
-      const json = await response.json();
-      const match = json.choices?.[0]?.message?.content?.match(/\d+/);
-      return match ? parseInt(match[0]) : null;
-    } catch (err) {
-      console.error('AI scoring error:', err);
+      const data = await response.json();
+      const content = data.choices?.[0]?.message?.content || '';
+      const score = parseInt(content);
+      return isNaN(score) ? null : score;
+    } catch (error) {
+      console.error('Error scoring:', error);
       return null;
     }
   };
 
   try {
-    const allItems = [];
+    const results = [];
 
-    for (const url of feeds) {
-      const feed = await parser.parseURL(url);
-      for (const item of feed.items.slice(0, 5)) {
+    for (const feed of feeds) {
+      const parsed = await parser.parseURL(feed);
+      for (const item of parsed.items.slice(0, 5)) {
         const score = await scoreThreat(item.title);
-        allItems.push({ ...item, score });
+        results.push({
+          title: item.title,
+          link: item.link,
+          score,
+        });
       }
     }
 
-    res.status(200).json({ items: allItems });
+    res.status(200).json({ items: results });
   } catch (err) {
-    console.error('Feed error:', err);
-    res.status(500).json({ error: 'Failed to load threats' });
+    console.error('Error processing feeds:', err);
+    res.status(500).json({ error: 'Failed to process feeds' });
   }
 }

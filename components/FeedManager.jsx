@@ -20,7 +20,7 @@ export default function FeedManager() {
     if (!newFeed.trim()) return;
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/threats`), {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/threats`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: newFeed.trim() }),
@@ -39,7 +39,7 @@ export default function FeedManager() {
   const removeFeed = async (url) => {
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/threats`), {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/threats`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url }),

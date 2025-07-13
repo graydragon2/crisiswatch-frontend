@@ -38,4 +38,4 @@ export default function DashboardPage() {
       const data = await res.json();
       setResult(data);
     } catch (err) {
-      setResult({ error: 'Error
+      setResult({ error: 'Error checking dark web' });

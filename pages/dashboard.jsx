@@ -1,15 +1,19 @@
 'use client';
-import DarkWebChecker from '@/components/DarkWebChecker';
+
 import { useState, useEffect } from 'react';
-import FeedList from '../components/FeedList';
-import Sidebar from '../components/Sidebar';
-import ThreatScorer from '@/components/ThreatScorer'; // adjust path if needed
+import Link from 'next/link';
+
+import DarkWebChecker from '@/components/DarkWebChecker';
+import FeedList from '@/components/FeedList';
+import Sidebar from '@/components/Sidebar';
+import ThreatScorer from '@/components/ThreatScorer';
+
 import {
   Card,
   CardHeader,
   CardTitle,
-  CardContent
-} from '../components/ui/card';
+  CardContent,
+} from '@/components/ui/card';
 
 export default function Dashboard() {
   const [threats, setThreats] = useState([]);
@@ -42,6 +46,7 @@ export default function Dashboard() {
         <h1 className="text-2xl font-bold mb-6">CrisisWatch Dashboard</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Threat Feed */}
           <Card className="md:col-span-2">
             <CardHeader>
               <CardTitle>🛡️ Threat Feed</CardTitle>
@@ -70,6 +75,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
+          {/* Manage RSS Feeds */}
           <Card>
             <CardHeader>
               <CardTitle>📡 Manage RSS Feeds</CardTitle>
@@ -79,16 +85,31 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          
+          {/* Dark Web Monitoring */}
           <Card>
-           <CardHeader>
-            <CardTitle>🌐 Dark Web Monitoring</CardTitle>
-           </CardHeader>
-           <CardContent>
-            <DarkWebChecker />
-           </CardContent>
+            <CardHeader>
+              <CardTitle>🌐 Dark Web Monitoring</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <DarkWebChecker />
+            </CardContent>
           </Card>
 
+          {/* Phishing Detection */}
+          <Card>
+            <CardHeader>
+              <CardTitle>🧠 Phishing Detection</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="h-24 bg-muted rounded-md flex items-center justify-center text-muted-foreground">
+                <p className="text-sm text-center">
+                  Coming soon: real-time graph of phishing attempts.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Keyword Alerts */}
           <Card>
             <CardHeader>
               <CardTitle>🔍 Keywords Alert</CardTitle>
@@ -101,26 +122,6 @@ export default function Dashboard() {
               </ul>
             </CardContent>
           </Card>
+
+          {/* Threat Scoring AI */}
           <Card>
-           <CardHeader>
-             <CardTitle>🤖 Threat Scoring AI</CardTitle>
-           </CardHeader>
-           <CardContent>
-           <ThreatScorer />
-          </CardContent>
-          </Card>
-          <Card className="md:col-span-2">
-            <CardHeader>
-              <CardTitle>🗺️ Propagation Overlay</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-48 bg-muted rounded-md flex items-center justify-center text-muted-foreground">
-                [Map Placeholder]
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </main>
-    </div>
-  );
-}

@@ -1,39 +1,41 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from '@/components/Sidebar';
 import FeedList from '@/components/FeedList';
 import DarkWebChecker from '@/components/DarkWebChecker';
 import ThreatScorer from '@/components/ThreatScorer';
 import PhishingChart from '@/components/PhishingChart';
-
 import {
   Card,
   CardHeader,
   CardTitle,
-  CardContent
+  CardContent,
 } from '@/components/ui/card';
 
-
 export default function Dashboard() {
-  const [threats, setThreats] = useState([]);
+  const [feeds, setFeeds] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchThreats = async () => {
+    const fetchFeeds = async () => {
       try {
-        const res = await fetch('https://crisiswatch-api-production.up.railway.app');
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/feeds`
+        );
         const json = await res.json();
-        setThreats(json.items || []);
+        // our endpoint returns { feeds: [ {url,title,items}, … ] }
+        setFeeds(json.feeds || []);
       } catch (err) {
-        console.error('Failed to fetch threats:', err);
+        console.error('Failed to load feeds:', err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchThreats();
-    const interval = setInterval(fetchThreats, 5 * 60 * 1000);
+    fetchFeeds();
+    // optional: refresh every 5 minutes
+    const interval = setInterval(fetchFeeds, 5 * 60 * 1000);
     return () => clearInterval(interval);
   }, []);
 
@@ -45,36 +47,41 @@ export default function Dashboard() {
         <h1 className="text-2xl font-bold mb-6">CrisisWatch Dashboard</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Threat Feed */}
+          {/* 🛡️ Threat Feed (now using RSS Feeds) */}
           <Card className="md:col-span-2">
             <CardHeader>
               <CardTitle>🛡️ Threat Feed</CardTitle>
             </CardHeader>
             <CardContent>
               {loading ? (
-                <p className="text-muted-foreground">Loading...</p>
-              ) : threats.length === 0 ? (
-                <p className="text-muted-foreground">No threats found.</p>
+                <p className="text-muted-foreground">Loading feeds…</p>
+              ) : feeds.length === 0 ? (
+                <p className="text-muted-foreground">No feeds found.</p>
               ) : (
-                <ul className="space-y-3">
-                  {threats.map((item, idx) => (
-                    <li key={idx} className="border-b border-border pb-2">
-                      <a
-                        href={item.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 dark:text-blue-400 hover:underline"
+                <ul className="space-y-2">
+                  {feeds.flatMap((feed) =>
+                    feed.items.slice(0, 5).map((item, i) => (
+                      <li
+                        key={`${feed.url}-${i}`}
+                        className="border-b border-border pb-2"
                       >
-                        {item.title}
-                      </a>
-                    </li>
-                  ))}
+                        <a
+                          href={item.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 dark:text-blue-400 hover:underline"
+                        >
+                          {item.title}
+                        </a>
+                      </li>
+                    ))
+                  )}
                 </ul>
               )}
             </CardContent>
           </Card>
 
-          {/* Manage RSS Feeds */}
+          {/* 📡 Manage RSS Feeds */}
           <Card>
             <CardHeader>
               <CardTitle>📡 Manage RSS Feeds</CardTitle>
@@ -84,7 +91,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          {/* Dark Web */}
+          {/* 🌐 Dark Web Monitoring */}
           <Card>
             <CardHeader>
               <CardTitle>🌐 Dark Web Monitoring</CardTitle>
@@ -94,7 +101,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          {/* Keywords Alert */}
+          {/* 🔍 Keywords Alert */}
           <Card>
             <CardHeader>
               <CardTitle>🔍 Keywords Alert</CardTitle>
@@ -108,7 +115,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          {/* Threat Scoring AI */}
+          {/* 🤖 Threat Scoring AI */}
           <Card>
             <CardHeader>
               <CardTitle>🤖 Threat Scoring AI</CardTitle>
@@ -118,7 +125,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          {/* Propagation Map */}
+          {/* 🗺️ Propagation Overlay */}
           <Card className="md:col-span-2">
             <CardHeader>
               <CardTitle>🗺️ Propagation Overlay</CardTitle>
@@ -130,7 +137,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          {/* Phishing Detection Graph */}
+          {/* 🎯 Phishing Detection */}
           <Card className="md:col-span-2">
             <CardHeader>
               <CardTitle>🎯 Phishing Detection</CardTitle>

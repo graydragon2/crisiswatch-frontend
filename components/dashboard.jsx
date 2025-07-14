@@ -73,7 +73,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          {/* 📡 RSS Feed Management */}
+          {/* 📡 Manage RSS Feeds */}
           <Card>
             <CardHeader>
               <CardTitle>📡 Manage RSS Feeds</CardTitle>
@@ -93,7 +93,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          {/* 🔍 Keywords */}
+          {/* 🔍 Keywords Alert */}
           <Card>
             <CardHeader>
               <CardTitle>🔍 Keywords Alert</CardTitle>

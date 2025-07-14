@@ -4,16 +4,13 @@ import { useEffect, useState } from 'react';
 import Sidebar from '@/components/Sidebar';
 import FeedList from '@/components/FeedList';
 import DarkWebChecker from '@/components/DarkWebChecker';
-<<<<<<< HEAD
 import ThreatScorer from '@/components/ThreatScorer';
 import PhishingChart from '@/components/PhishingChart';
 
-=======
 import { useState, useEffect } from 'react';
 import FeedList from '../components/FeedList';
 import Sidebar from '../components/sidebar';
 import ThreatScorer from '@/components/ThreatScorer'; // adjust path if needed
->>>>>>> 2d39479 (Fix FeedList and dashboard updates)
 import {
   Card,
   CardHeader,

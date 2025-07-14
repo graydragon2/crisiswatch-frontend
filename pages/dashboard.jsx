@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Sidebar from '@/components/Sidebar';
+import ThemeToggle from '@/components/ThemeToggle';
 import FeedList from '@/components/FeedList';
 import DarkWebChecker from '@/components/DarkWebChecker';
 import ThreatScorer from '@/components/ThreatScorer';
@@ -15,10 +16,10 @@ import {
 
 export default function Dashboard() {
   const [feeds, setFeeds] = useState([]);
-  const [loadingFeeds, setLoadingFeeds] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function loadFeeds() {
+    const fetchFeeds = async () => {
       try {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/feeds`
@@ -28,40 +29,40 @@ export default function Dashboard() {
       } catch (err) {
         console.error('Failed to load feeds:', err);
       } finally {
-        setLoadingFeeds(false);
+        setLoading(false);
       }
-    }
-
-    loadFeeds();
-    // optional: refresh every 5 minutes
-    const iv = setInterval(loadFeeds, 5 * 60 * 1000);
-    return () => clearInterval(iv);
+    };
+    fetchFeeds();
+    const interval = setInterval(fetchFeeds, 5 * 60 * 1000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
     <div className="flex min-h-screen bg-background text-foreground">
-      {/* only render Sidebar once */}
       <Sidebar />
 
       <main className="flex-1 p-6">
-        <h1 className="text-2xl font-bold mb-6">CrisisWatch Dashboard</h1>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold">CrisisWatch Dashboard</h1>
+          {/* Dark / Light toggle */}
+          <ThemeToggle />
+        </div>
 
-        {/* Responsive grid: 1 col on xs, 2 on sm, 3 on lg+ */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* 🛡️ Threat Feed */}
-          <Card className="sm:col-span-2">
+          <Card className="md:col-span-2">
             <CardHeader>
               <CardTitle>🛡️ Threat Feed</CardTitle>
             </CardHeader>
             <CardContent>
-              {loadingFeeds ? (
+              {loading ? (
                 <p className="text-muted-foreground">Loading feeds…</p>
               ) : feeds.length === 0 ? (
-                <p className="text-muted-foreground">No feeds yet.</p>
+                <p className="text-muted-foreground">No feeds found.</p>
               ) : (
                 <ul className="space-y-2">
                   {feeds.flatMap((feed) =>
-                    (feed.items || []).slice(0, 5).map((item, i) => (
+                    feed.items.slice(0, 5).map((item, i) => (
                       <li
                         key={`${feed.url}-${i}`}
                         className="border-b border-border pb-2"
@@ -127,7 +128,7 @@ export default function Dashboard() {
           </Card>
 
           {/* 🗺️ Propagation Overlay */}
-          <Card className="sm:col-span-2">
+          <Card className="md:col-span-2">
             <CardHeader>
               <CardTitle>🗺️ Propagation Overlay</CardTitle>
             </CardHeader>
@@ -139,7 +140,7 @@ export default function Dashboard() {
           </Card>
 
           {/* 🎯 Phishing Detection */}
-          <Card className="sm:col-span-2">
+          <Card className="md:col-span-2">
             <CardHeader>
               <CardTitle>🎯 Phishing Detection</CardTitle>
             </CardHeader>

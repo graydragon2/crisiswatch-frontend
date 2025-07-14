@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 
 
-const BACKEND_URL = 'crisiswatch-api-production.up.railway.app'; // Replace with your actual backend URL
+const BACKEND_URL = 'crisiswatch-api-production.up.railway.app';
 
-const BACKEND_URL = 'https://crisiswatch-api-production.up.railway.app'; 
 
 export default function FeedList() {
   const [feeds, setFeeds] = useState([]);
@@ -16,7 +15,7 @@ export default function FeedList() {
 
   const fetchFeeds = async () => {
     try {
-      const res = await fetch(`${BACKEND_URL}/api/feeds`);
+      const res = await fetch(`https://crisiswatch-api-production.up.railway.app`);
       const json = await res.json();
       setFeeds(json.feeds || []);
     } catch (err) {
@@ -28,7 +27,7 @@ export default function FeedList() {
   const addFeed = async () => {
     if (!newFeed) return;
     try {
-      const res = await fetch(`${BACKEND_URL}/api/feeds`, {
+      const res = await fetch(`https://crisiswatch-api-production.up.railway.app`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: newFeed }),

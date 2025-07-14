@@ -34,17 +34,19 @@ export default function Dashboard() {
 
   return (
     <div className="flex min-h-screen bg-background text-foreground">
-      {/* Sidebar is now rendered just once in your layout/_app */}
-      <main className="flex-1 p-6 max-w-screen-lg mx-auto">
+      {/* Sidebar lives in your layout or _app.js */}
+      <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8 w-full">
         <h1 className="text-2xl font-bold mb-6">CrisisWatch Dashboard</h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {/* 🛡️ Threat Feed */}
           <Card className="md:col-span-2">
             <CardHeader>
-              <CardTitle>🛡️ Threat Feed</CardTitle>
+              <CardTitle className="break-words">
+                🛡️ Threat Feed
+              </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="whitespace-normal break-words">
               {loading ? (
                 <p className="text-muted-foreground">Loading feeds…</p>
               ) : feeds.length === 0 ? (
@@ -61,7 +63,7 @@ export default function Dashboard() {
                           href={item.link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-blue-600 dark:text-blue-400 hover:underline"
+                          className="text-blue-600 dark:text-blue-400 hover:underline break-words"
                         >
                           {item.title}
                         </a>
@@ -76,7 +78,9 @@ export default function Dashboard() {
           {/* 📡 Manage RSS Feeds */}
           <Card>
             <CardHeader>
-              <CardTitle>📡 Manage RSS Feeds</CardTitle>
+              <CardTitle className="break-words">
+                📡 Manage RSS Feeds
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <FeedList />
@@ -86,9 +90,11 @@ export default function Dashboard() {
           {/* 🌐 Dark Web Monitoring */}
           <Card>
             <CardHeader>
-              <CardTitle>🌐 Dark Web Monitoring</CardTitle>
+              <CardTitle className="break-words">
+                🌐 Dark Web Monitoring
+              </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="whitespace-normal break-words">
               <DarkWebChecker />
             </CardContent>
           </Card>
@@ -96,9 +102,11 @@ export default function Dashboard() {
           {/* 🔍 Keywords Alert */}
           <Card>
             <CardHeader>
-              <CardTitle>🔍 Keywords Alert</CardTitle>
+              <CardTitle className="break-words">
+                🔍 Keywords Alert
+              </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="break-words">
               <ul className="text-sm list-disc pl-5 space-y-1 text-muted-foreground">
                 <li>malware</li>
                 <li>ransomware</li>
@@ -110,9 +118,11 @@ export default function Dashboard() {
           {/* 🤖 Threat Scoring AI */}
           <Card>
             <CardHeader>
-              <CardTitle>🤖 Threat Scoring AI</CardTitle>
+              <CardTitle className="break-words">
+                🤖 Threat Scoring AI
+              </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="whitespace-normal break-words">
               <ThreatScorer />
             </CardContent>
           </Card>
@@ -120,7 +130,9 @@ export default function Dashboard() {
           {/* 🗺️ Propagation Overlay */}
           <Card className="md:col-span-2">
             <CardHeader>
-              <CardTitle>🗺️ Propagation Overlay</CardTitle>
+              <CardTitle className="break-words">
+                🗺️ Propagation Overlay
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-48 bg-muted rounded-md flex items-center justify-center text-muted-foreground">
@@ -132,9 +144,11 @@ export default function Dashboard() {
           {/* 🎯 Phishing Detection */}
           <Card className="md:col-span-2">
             <CardHeader>
-              <CardTitle>🎯 Phishing Detection</CardTitle>
+              <CardTitle className="break-words">
+                🎯 Phishing Detection
+              </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="whitespace-normal break-words">
               <p className="mb-4 text-sm text-muted-foreground">
                 Check for phishing indicators across monitored feeds.
               </p>

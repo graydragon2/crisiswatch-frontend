@@ -1,8 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
-
 import DarkWebChecker from '@/components/DarkWebChecker';
 import FeedList from '@/components/FeedList';
 import Sidebar from '@/components/Sidebar';
@@ -95,20 +93,6 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          {/* Phishing Detection */}
-          <Card>
-            <CardHeader>
-              <CardTitle>🧠 Phishing Detection</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-24 bg-muted rounded-md flex items-center justify-center text-muted-foreground">
-                <p className="text-sm text-center">
-                  Coming soon: real-time graph of phishing attempts.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-
           {/* Keyword Alerts */}
           <Card>
             <CardHeader>
@@ -125,3 +109,42 @@ export default function Dashboard() {
 
           {/* Threat Scoring AI */}
           <Card>
+            <CardHeader>
+              <CardTitle>🤖 Threat Scoring AI</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ThreatScorer />
+            </CardContent>
+          </Card>
+
+          {/* Propagation Overlay */}
+          <Card className="md:col-span-2">
+            <CardHeader>
+              <CardTitle>🗺️ Propagation Overlay</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="h-48 bg-muted rounded-md flex items-center justify-center text-muted-foreground">
+                [Map Placeholder]
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Phishing Detection + Graph */}
+          <Card className="md:col-span-2">
+            <CardHeader>
+              <CardTitle>🎣 Phishing Detection</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="mb-4 text-sm text-muted-foreground">
+                Check for phishing indicators across monitored feeds.
+              </p>
+              <div className="h-48 w-full bg-muted rounded-md flex items-center justify-center text-muted-foreground">
+                [Graph Placeholder]
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </main>
+    </div>
+  );
+}

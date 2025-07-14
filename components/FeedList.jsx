@@ -1,8 +1,8 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 
-
-const BACKEND_URL = 'crisiswatch-api-production.up.railway.app';
-
+const BACKEND_URL = 'https://crisiswatch-api-production.up.railway.app';
 
 export default function FeedList() {
   const [feeds, setFeeds] = useState([]);
@@ -15,7 +15,7 @@ export default function FeedList() {
 
   const fetchFeeds = async () => {
     try {
-      const res = await fetch(`https://crisiswatch-api-production.up.railway.app`);
+      const res = await fetch(`${BACKEND_URL}/api/feeds`);
       const json = await res.json();
       setFeeds(json.feeds || []);
     } catch (err) {
@@ -27,7 +27,7 @@ export default function FeedList() {
   const addFeed = async () => {
     if (!newFeed) return;
     try {
-      const res = await fetch(`https://crisiswatch-api-production.up.railway.app`, {
+      const res = await fetch(`${BACKEND_URL}/api/feeds`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: newFeed }),
@@ -60,11 +60,10 @@ export default function FeedList() {
       </div>
       {error && <p className="text-red-500 text-sm">{error}</p>}
       <ul className="list-disc ml-5 text-sm text-black dark:text-white">
-  {feeds.map((feed, idx) => (
-    <li key={idx}>{feed.title || feed}</li>
-  ))}
-</ul>
-
+        {feeds.map((feed, idx) => (
+          <li key={idx}>{feed.title || feed}</li>
+        ))}
+      </ul>
     </div>
   );
 }

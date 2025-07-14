@@ -66,7 +66,6 @@ export default function FeedList() {
           <li key={idx}>{feed.title}</li>
 
           <li key={idx}>{feed.title || feed}</li> {/* Fallback in case "title" is undefined */}
->>>>>>> c28007e (Resolve merge conflict and sync components)
         ))}
       </ul>
     </div>

@@ -1,47 +1,72 @@
-/* styles/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* 1. Light mode CSS variables */
+/* ──────────────────────────────────────────────────────────────────────────
+   1. Theme variables
+   ────────────────────────────────────────────────────────────────────────── */
 :root {
-  --background: #f9fafb;
+  /* text + background */
   --foreground: #111827;
-  --muted: #e5e7eb;
+  --background: #f9fafb;
+
+  /* muted panel + text */
+  --muted: #f3f4f6;
   --muted-foreground: #6b7280;
+
+  /* borders / rings */
+  --border: #e5e7eb;
+
+  /* primary accent */
   --primary: #3b82f6;
+  --primary-foreground: #ffffff;
+
+  /* card containers */
+  --card: #ffffff;
+  --card-foreground: #1f2937;
 }
 
-/* 2. Dark mode CSS variables */
+/* ──────────────────────────────────────────────────────────────────────────
+   2. Dark-mode overrides
+   ────────────────────────────────────────────────────────────────────────── */
 .dark {
-  --background: #1f2937;
   --foreground: #f9fafb;
+  --background: #1f2937;
+
   --muted: #374151;
   --muted-foreground: #9ca3af;
+
+  --border: #4b5563;
+
   --primary: #60a5fa;
+  --primary-foreground: #1f2937;
+
+  --card: #111827;
+  --card-foreground: #f9fafb;
 }
 
-/* 3. Base element styling using the variables */
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  background-color: var(--background);
-  color: var(--foreground);
-}
+/* ──────────────────────────────────────────────────────────────────────────
+   3. Map variables to utility classes
+   ────────────────────────────────────────────────────────────────────────── */
+@layer base {
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
 
-/* 4. Ensure links inherit proper colors */
-a {
-  color: var(--primary);
-  text-decoration: none;
-}
-a:hover {
-  text-decoration: underline;
-}
+  .bg-background   { background-color: var(--background) !important; }
+  .text-foreground { color: var(--foreground) !important; }
 
-/* 5. Utility resets (optional—but recommended) */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+  .bg-muted                 { background-color: var(--muted) !important; }
+  .text-muted-foreground    { color: var(--muted-foreground) !important; }
+
+  .border-border { border-color: var(--border) !important; }
+  .ring-border   { --tw-ring-color: var(--border) !important; }
+
+  .bg-card              { background-color: var(--card) !important; }
+  .text-card-foreground { color: var(--card-foreground) !important; }
+
+  .text-primary           { color: var(--primary) !important; }
+  .bg-primary             { background-color: var(--primary) !important; }
+  .text-primary-foreground { color: var(--primary-foreground) !important; }
 }

@@ -7,17 +7,13 @@ import DarkWebChecker from '@/components/DarkWebChecker';
 import ThreatScorer from '@/components/ThreatScorer';
 import PhishingChart from '@/components/PhishingChart';
 
-import { useState, useEffect } from 'react';
-import FeedList from '../components/FeedList';
-import Sidebar from '../components/sidebar';
-import ThreatScorer from '@/components/ThreatScorer'; // adjust path if needed
-
 import {
   Card,
   CardHeader,
   CardTitle,
   CardContent
 } from '@/components/ui/card';
+
 
 export default function Dashboard() {
   const [threats, setThreats] = useState([]);

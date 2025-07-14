@@ -22,24 +22,16 @@ const data = [
 
 export default function PhishingChart() {
   return (
-    <div className="w-full h-60">
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#444" />
-          <XAxis dataKey="name" stroke="#888" />
-          <YAxis stroke="#888" />
-          <Tooltip />
-          <Line
-            type="monotone"
-            dataKey="detections"
-            stroke="#8884d8"
-            strokeWidth={2}
-            dot={{ r: 4 }}
-            activeDot={{ r: 6 }}
-          />
-        </LineChart>
-      </ResponsiveContainer>
-    </div>
+    <ResponsiveContainer width="100%" height={200}>
+      <LineChart data={data}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="name" />
+        <YAxis />
+        <Tooltip />
+        <Line type="monotone" dataKey="detections" stroke="#8884d8" strokeWidth={2} />
+      </LineChart>
+    </ResponsiveContainer>
   );
 }
+
 

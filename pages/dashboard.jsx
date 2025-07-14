@@ -1,17 +1,12 @@
+// File: pages/dashboard.jsx
 'use client';
 
-import { useState, useEffect } from 'react';
-import Sidebar from '@/components/Sidebar';
+import { useEffect, useState } from 'react';
 import FeedList from '@/components/FeedList';
 import DarkWebChecker from '@/components/DarkWebChecker';
 import ThreatScorer from '@/components/ThreatScorer';
 import PhishingChart from '@/components/PhishingChart';
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 
 export default function Dashboard() {
   const [feeds, setFeeds] = useState([]);
@@ -39,10 +34,8 @@ export default function Dashboard() {
 
   return (
     <div className="flex min-h-screen bg-background text-foreground">
-      <Sidebar />
-
-      {/* Note the added “container mx-auto” here */}
-      <main className="flex-1 p-6 container mx-auto">
+      {/* Sidebar is now rendered just once in your layout/_app */}
+      <main className="flex-1 p-6 max-w-screen-lg mx-auto">
         <h1 className="text-2xl font-bold mb-6">CrisisWatch Dashboard</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

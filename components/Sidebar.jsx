@@ -38,10 +38,13 @@ export default function Sidebar() {
 
       {/* Sidebar */}
       <aside
-        className={cn(
-          'md:static md:block fixed top-0 left-0 h-full w-64 bg-muted p-6 border-r border-border z-50 transition-transform duration-300',
-          open ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
-        )}
+        <aside
+  className={cn(
+-    'md:static md:block fixed top-0 left-0 h-full w-64 bg-muted p-6 border-r border-border z-50 transition-transform duration-300',
++    'fixed inset-y-0 left-0 w-full md:w-64 bg-muted p-6 border-r border-border z-50 transition-transform duration-300 md:static',
+    open ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+  )}
+>
       >
         <div className="text-2xl font-bold mb-8 text-foreground hidden md:block">
           CrisisWatch

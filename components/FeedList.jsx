@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 
+<<<<<<< HEAD
 const BACKEND_URL = 'crisiswatch-api-production.up.railway.app'; // Replace with your actual backend URL
+=======
+const BACKEND_URL = 'https://crisiswatch-api-production.up.railway.app'; // ✅ Fixed
+>>>>>>> c28007e (Resolve merge conflict and sync components)
 
 export default function FeedList() {
   const [feeds, setFeeds] = useState([]);
@@ -59,7 +63,11 @@ export default function FeedList() {
       {error && <p className="text-red-500 text-sm">{error}</p>}
       <ul className="list-disc ml-5 text-sm text-black dark:text-white">
         {feeds.map((feed, idx) => (
+<<<<<<< HEAD
           <li key={idx}>{feed.title}</li>
+=======
+          <li key={idx}>{feed.title || feed}</li> {/* Fallback in case "title" is undefined */}
+>>>>>>> c28007e (Resolve merge conflict and sync components)
         ))}
       </ul>
     </div>

@@ -22,7 +22,7 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchThreats = async () => {
       try {
-        const res = await fetch('/api/threats');
+        const res = await fetch('https://crisiswatch-api-production.up.railway.app');
         const json = await res.json();
         setThreats(json.items || []);
       } catch (err) {

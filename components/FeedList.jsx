@@ -3,8 +3,7 @@ import { useState, useEffect } from 'react';
 
 const BACKEND_URL = 'crisiswatch-api-production.up.railway.app'; // Replace with your actual backend URL
 
-const BACKEND_URL = 'https://crisiswatch-api-production.up.railway.app'; // ✅ Fixed
->>>>>>> c28007e (Resolve merge conflict and sync components)
+const BACKEND_URL = 'https://crisiswatch-api-production.up.railway.app'; 
 
 export default function FeedList() {
   const [feeds, setFeeds] = useState([]);

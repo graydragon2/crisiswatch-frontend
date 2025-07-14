@@ -1,12 +1,13 @@
-// File: pages/dashboard.jsx
+// pages/dashboard.jsx
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from '@/components/Sidebar';
 import FeedList from '@/components/FeedList';
 import DarkWebChecker from '@/components/DarkWebChecker';
 import ThreatScorer from '@/components/ThreatScorer';
 import PhishingChart from '@/components/PhishingChart';
+
 import {
   Card,
   CardHeader,
@@ -19,42 +20,44 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function load() {
+    const fetchFeeds = async () => {
       try {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/feeds`
         );
         const json = await res.json();
         setFeeds(json.feeds || []);
-      } catch (e) {
-        console.error(e);
+      } catch (err) {
+        console.error('Failed to load feeds:', err);
       } finally {
         setLoading(false);
       }
-    }
-    load();
-    const id = setInterval(load, 5 * 60 * 1000);
-    return () => clearInterval(id);
+    };
+
+    fetchFeeds();
+    const interval = setInterval(fetchFeeds, 5 * 60 * 1000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
-    // overflow-x-hidden prevents any horizontal scroll
-    <div className="flex min-h-screen overflow-x-hidden bg-background text-foreground">
+    <div className="flex min-h-screen bg-background text-foreground">
       <Sidebar />
 
-      {/* main content */}
-      <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8 w-full overflow-hidden">
-        {/* center & cap width */}
-        <div className="max-w-screen-xl mx-auto">
-          <h1 className="text-2xl font-bold mb-6">CrisisWatch Dashboard</h1>
+      <main className="flex-1 py-6">
+        <div className="max-w-screen-xl mx-auto px-4 sm:px-6">
+          <h1 className="text-2xl font-bold mb-6 whitespace-normal break-words">
+            CrisisWatch Dashboard
+          </h1>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Threat Feed */}
             <Card className="sm:col-span-2">
               <CardHeader>
-                <CardTitle className="break-words">🛡️ Threat Feed</CardTitle>
+                <CardTitle className="whitespace-normal break-words">
+                  🛡️ Threat Feed
+                </CardTitle>
               </CardHeader>
-              <CardContent className="whitespace-normal break-words">
+              <CardContent>
                 {loading ? (
                   <p className="text-muted-foreground">Loading feeds…</p>
                 ) : feeds.length === 0 ? (
@@ -62,7 +65,7 @@ export default function Dashboard() {
                 ) : (
                   <ul className="space-y-2">
                     {feeds.flatMap((feed) =>
-                      feed.items.slice(0, 5).map((item, i) => (
+                      (feed.items || []).slice(0, 5).map((item, i) => (
                         <li
                           key={`${feed.url}-${i}`}
                           className="border-b border-border pb-2"
@@ -71,7 +74,7 @@ export default function Dashboard() {
                             href={item.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-blue-600 dark:text-blue-400 hover:underline break-words"
+                            className="block whitespace-normal break-words text-blue-600 dark:text-blue-400 hover:underline"
                           >
                             {item.title}
                           </a>
@@ -83,36 +86,38 @@ export default function Dashboard() {
               </CardContent>
             </Card>
 
-            {/* RSS Feed Management */}
+            {/* RSS Feed Manager */}
             <Card>
               <CardHeader>
-                <CardTitle className="break-words">
+                <CardTitle className="whitespace-normal break-words">
                   📡 Manage RSS Feeds
                 </CardTitle>
               </CardHeader>
-              <CardContent className="whitespace-normal break-words">
+              <CardContent>
                 <FeedList />
               </CardContent>
             </Card>
 
-            {/* Dark Web Monitoring */}
+            {/* Dark Web */}
             <Card>
               <CardHeader>
-                <CardTitle className="break-words">
+                <CardTitle className="whitespace-normal break-words">
                   🌐 Dark Web Monitoring
                 </CardTitle>
               </CardHeader>
-              <CardContent className="whitespace-normal break-words">
+              <CardContent>
                 <DarkWebChecker />
               </CardContent>
             </Card>
 
-            {/* Keywords Alert */}
+            {/* Keywords */}
             <Card>
               <CardHeader>
-                <CardTitle className="break-words">🔍 Keywords Alert</CardTitle>
+                <CardTitle className="whitespace-normal break-words">
+                  🔍 Keywords Alert
+                </CardTitle>
               </CardHeader>
-              <CardContent className="whitespace-normal break-words">
+              <CardContent>
                 <ul className="text-sm list-disc pl-5 space-y-1 text-muted-foreground">
                   <li>malware</li>
                   <li>ransomware</li>
@@ -121,12 +126,14 @@ export default function Dashboard() {
               </CardContent>
             </Card>
 
-            {/* Threat Scoring AI */}
+            {/* AI Scoring */}
             <Card>
               <CardHeader>
-                <CardTitle className="break-words">🤖 Threat Scoring AI</CardTitle>
+                <CardTitle className="whitespace-normal break-words">
+                  🤖 Threat Scoring AI
+                </CardTitle>
               </CardHeader>
-              <CardContent className="whitespace-normal break-words">
+              <CardContent>
                 <ThreatScorer />
               </CardContent>
             </Card>
@@ -134,7 +141,7 @@ export default function Dashboard() {
             {/* Propagation Overlay */}
             <Card className="sm:col-span-2">
               <CardHeader>
-                <CardTitle className="break-words">
+                <CardTitle className="whitespace-normal break-words">
                   🗺️ Propagation Overlay
                 </CardTitle>
               </CardHeader>
@@ -145,16 +152,16 @@ export default function Dashboard() {
               </CardContent>
             </Card>
 
-            {/* Phishing Detection */}
+            {/* Phishing Chart */}
             <Card className="sm:col-span-2">
               <CardHeader>
-                <CardTitle className="break-words">
+                <CardTitle className="whitespace-normal break-words">
                   🎯 Phishing Detection
                 </CardTitle>
               </CardHeader>
-              <CardContent className="whitespace-normal break-words">
-                <p className="mb-4 text-sm text-muted-foreground">
-                  Check for phishing indicators…
+              <CardContent>
+                <p className="mb-4 text-sm text-muted-foreground whitespace-normal break-words">
+                  Check for phishing indicators across monitored feeds.
                 </p>
                 <PhishingChart />
               </CardContent>

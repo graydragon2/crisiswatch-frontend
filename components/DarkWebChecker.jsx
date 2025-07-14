@@ -1,63 +1,57 @@
+'use client';
+
 import { useState } from 'react';
+import { BACKEND_URL } from '@/lib/api';
 
 export default function DarkWebChecker() {
   const [email, setEmail] = useState('');
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const checkBreach = async () => {
+  const checkDarkWeb = async () => {
+    if (!email.trim()) return;
     setLoading(true);
+    setResult(null);
     try {
-      const res = await fetch(`https://crisiswatch-api-production.up.railway.app/api/darkweb?email=${encodeURIComponent(email)}`);
-      const data = await res.json();
-      setResult(data);
+      const res = await fetch(
+        `${BACKEND_URL}/api/darkweb?email=${encodeURIComponent(email.trim())}`
+      );
+      const json = await res.json();
+      setResult(json);
     } catch (err) {
-      console.error('Error:', err);
-      setResult({ error: 'Check failed. Try again.' });
+      console.error(err);
+      setResult({ error: 'Lookup failed' });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="p-2">
-      <input
-        className="w-full border px-3 py-2 rounded mb-4"
-        type="email"
-        placeholder="Enter your email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <button
-        className="bg-blue-600 text-white px-4 py-2 rounded mb-4"
-        onClick={checkBreach}
-        disabled={loading || !email}
-      >
-        {loading ? 'Checking...' : 'Check Now'}
-      </button>
-
-      {result && (
-        <div className="mt-4 bg-gray-100 p-4 rounded text-sm">
-          {result.error || result.success === false ? (
-            <p className="text-red-600">{result.error || 'No breaches found.'}</p>
-          ) : (
-            <>
-              <p className="font-semibold text-red-600">
-                Breaches Found: {result.sources?.length || 0}
-              </p>
-
-              <p className="text-gray-700 mt-2">Exposed Fields: {result.fields?.join(', ')}</p>
-
-              <ul className="mt-2 list-disc ml-5 max-h-40 overflow-auto">
-                {result.sources?.map((src, i) => (
-                  <li key={i}>
-                    <strong>{src.name}</strong> — {src.date || 'Date unknown'}
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
-        </div>
+    <div className="space-y-2">
+      <div className="flex gap-2">
+        <input
+          type="text"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Enter your email"
+          className="flex-1 p-2 rounded bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
+        />
+        <button
+          onClick={checkDarkWeb}
+          disabled={loading}
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          {loading ? 'Checking…' : 'Check Now'}
+        </button>
+      </div>
+      {result?.error && <p className="text-red-500 text-sm">{result.error}</p>}
+      {result?.found === true && (
+        <p className="text-red-500 text-sm">
+          ⚠️ Compromised credentials found
+        </p>
+      )}
+      {result?.found === false && (
+        <p className="text-green-500 text-sm">✅ No compromises found</p>
       )}
     </div>
   );

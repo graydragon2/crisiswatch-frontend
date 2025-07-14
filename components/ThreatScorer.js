@@ -14,7 +14,7 @@ export default function ThreatScorer() {
     setError('');
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/score`, {
+      const res = await fetch(`https://crisiswatch-api-production.up.railway.app`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: headline }),

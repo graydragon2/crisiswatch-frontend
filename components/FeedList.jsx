@@ -61,13 +61,11 @@ export default function FeedList() {
       </div>
       {error && <p className="text-red-500 text-sm">{error}</p>}
       <ul className="list-disc ml-5 text-sm text-black dark:text-white">
-        {feeds.map((feed, idx) => (
+  {feeds.map((feed, idx) => (
+    <li key={idx}>{feed.title || feed}</li>
+  ))}
+</ul>
 
-          <li key={idx}>{feed.title}</li>
-
-          <li key={idx}>{feed.title || feed}</li> {/* Fallback in case "title" is undefined */}
-        ))}
-      </ul>
     </div>
   );
 }

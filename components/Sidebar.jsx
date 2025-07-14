@@ -1,3 +1,4 @@
+// components/Sidebar.jsx
 'use client';
 
 import Link from 'next/link';
@@ -28,10 +29,14 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* Mobile toggle */}
-      <div className="md:hidden p-4 flex justify-between items-center bg-muted border-b border-border">
+      {/* Mobile header: only on small screens */}
+      <div className="md:hidden flex items-center justify-between p-4 bg-muted border-b border-border">
         <div className="text-xl font-bold text-foreground">CrisisWatch</div>
-        <button onClick={() => setOpen(!open)} aria-label="Toggle Menu">
+        <button
+          onClick={() => setOpen(!open)}
+          aria-label="Toggle menu"
+          className="text-foreground"
+        >
           {open ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
@@ -39,30 +44,30 @@ export default function Sidebar() {
       {/* Sidebar itself */}
       <aside
         className={cn(
-          // full-screen off-canvas on small, fixed width on md+
-          'fixed inset-y-0 left-0 w-full md:w-64 bg-muted p-6 border-r border-border z-50 transition-transform duration-300 md:static',
-          // slide in/out on mobile
-          open ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+          'fixed inset-y-0 left-0 z-50 w-full transform overflow-y-auto bg-muted p-6 border-r border-border transition-transform duration-300 md:static md:inset-auto md:transform-none md:w-64',
+          open ? 'translate-x-0' : '-translate-x-full'
         )}
       >
-        <div className="hidden md:block text-2xl font-bold mb-8 text-foreground">
+        {/* Desktop header: only on md+ */}
+        <div className="hidden md:block mb-8 text-2xl font-bold text-foreground">
           CrisisWatch
         </div>
+
         <nav className="space-y-3">
           {navItems.map((item) => (
             <Link
               key={item.name}
               href={item.href}
               className={cn(
-                'flex items-center gap-3 px-3 py-2 rounded-md hover:bg-muted-foreground/10 transition',
+                'flex items-center gap-3 px-3 py-2 rounded-md hover:bg-muted-foreground/10 transition break-words',
                 pathname === item.href
                   ? 'text-primary font-semibold'
                   : 'text-muted-foreground'
               )}
-              onClick={() => setOpen(false)}
+              onClick={() => setOpen(false)} // close on mobile when you click a link
             >
               {item.icon}
-              {item.name}
+              <span className="break-words">{item.name}</span>
             </Link>
           ))}
         </nav>

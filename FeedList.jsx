@@ -1,91 +1,58 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 
-const BACKEND_URL = 'https://crisiswatch-api-production.up.railway.app';
+const BACKEND = 'https://crisiswatch-api-production.up.railway.app';
 
 export default function FeedList() {
   const [feeds, setFeeds] = useState([]);
-  const [newFeed, setNewFeed] = useState('');
   const [error, setError] = useState('');
 
   useEffect(() => {
-    fetchFeeds();
+    fetch(`${BACKEND}/api/feeds`)
+      .then(res => {
+        if (!res.ok) throw new Error(`Status ${res.status}`);
+        return res.json();
+      })
+      .then(data => setFeeds(data.feeds || []))
+      .catch(err => setError(`Failed to load feeds: ${err.message}`));
   }, []);
 
-  const fetchFeeds = async () => {
-    try {
-      const res = await fetch(`${BACKEND_URL}/api/feeds`);
-      const json = await res.json();
-      setFeeds(json.feeds || []);
-    } catch (err) {
-      console.error(err);
-      setError('Failed to load feeds.');
-    }
-  };
-
-  const addFeed = async () => {
-    if (!newFeed.trim()) return;
-    try {
-      const res = await fetch(`${BACKEND_URL}/api/feeds`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: newFeed }),
-      });
-      if (!res.ok) throw new Error('Failed to add feed.');
-      setNewFeed('');
-      fetchFeeds();
-    } catch (err) {
-      console.error(err);
-      setError('Error adding feed.');
-    }
-  };
-
-  const removeFeed = async (url) => {
-    try {
-      const res = await fetch(`${BACKEND_URL}/api/feeds`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url }),
-      });
-      if (!res.ok) throw new Error('Failed to remove feed.');
-      fetchFeeds();
-    } catch (err) {
-      console.error(err);
-      setError('Error removing feed.');
-    }
-  };
-
   return (
-    <div className="space-y-2">
-      <div className="flex gap-2">
-        <input
-          type="text"
-          value={newFeed}
-          onChange={(e) => setNewFeed(e.target.value)}
-          placeholder="Add new RSS feed URL"
-          className="flex-1 p-2 rounded bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
-        />
-        <button
-          onClick={addFeed}
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+    <div className="space-y-4">
+      {error && <p className="text-red-500">{error}</p>}
+
+      {feeds.map(({ url, title, items }) => (
+        <div
+          key={url}
+          className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg shadow"
         >
-          Add
-        </button>
-      </div>
-      {error && <p className="text-red-500 text-sm">{error}</p>}
-      <ul className="list-disc ml-5 text-sm text-black dark:text-white space-y-1">
-        {feeds.length === 0 && <li className="text-muted-foreground">No feeds available.</li>}
-        {feeds.map((feed, idx) => (
-          <li key={idx} className="flex justify-between items-center">
-            <span className="truncate">{feed.title || feed}</span>
-            <button
-              onClick={() => removeFeed(feed.url || feed)}
-              className="text-sm text-red-500 hover:underline"
-            >
-              Remove
-            </button>
-          </li>
-        ))}
-      </ul>
+          <h3 className="font-semibold">
+            {title || url}
+          </h3>
+
+          {items.length > 0 ? (
+            <ul className="mt-2 list-disc list-inside text-sm">
+              {items.map((item, i) => (
+                <li key={i}>
+                  <a
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 dark:text-blue-400 hover:underline"
+                  >
+                    {item.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-2 text-xs text-gray-500">
+              No articles available.
+            </p>
+          )}
+        </div>
+      ))}
     </div>
   );
 }

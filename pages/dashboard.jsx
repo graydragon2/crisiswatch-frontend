@@ -7,13 +7,11 @@ import DarkWebChecker from '@/components/DarkWebChecker';
 import ThreatScorer from '@/components/ThreatScorer';
 import PhishingChart from '@/components/PhishingChart';
 
-<<<<<<< HEAD
 import { useState, useEffect } from 'react';
 import FeedList from '../components/FeedList';
 import Sidebar from '../components/sidebar';
 import ThreatScorer from '@/components/ThreatScorer'; // adjust path if needed
-=======
->>>>>>> c28007e (Resolve merge conflict and sync components)
+
 import {
   Card,
   CardHeader,

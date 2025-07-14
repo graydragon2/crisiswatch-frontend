@@ -13,7 +13,8 @@ export default function App({ Component, pageProps }) {
   }, [dark]);
 
   return (
-    <div className="flex min-h-screen bg-background text-foreground transition-colors">
+    <div className="min-h-screen bg-white dark:bg-[#09090b] text-foreground transition-colors">
+
       <Sidebar />
       
       <main className="flex-1 p-6">

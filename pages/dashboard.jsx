@@ -1,16 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import DarkWebChecker from '@/components/DarkWebChecker';
-import FeedList from '@/components/FeedList';
+import { useEffect, useState } from 'react';
 import Sidebar from '@/components/Sidebar';
+import FeedList from '@/components/FeedList';
+import DarkWebChecker from '@/components/DarkWebChecker';
 import ThreatScorer from '@/components/ThreatScorer';
+import PhishingChart from '@/components/PhishingChart';
 
 import {
   Card,
   CardHeader,
   CardTitle,
-  CardContent,
+  CardContent
 } from '@/components/ui/card';
 
 export default function Dashboard() {
@@ -19,7 +20,6 @@ export default function Dashboard() {
 
   useEffect(() => {
     const fetchThreats = async () => {
-      setLoading(true);
       try {
         const res = await fetch('/api/threats');
         const json = await res.json();
@@ -83,7 +83,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          {/* Dark Web Monitoring */}
+          {/* Dark Web */}
           <Card>
             <CardHeader>
               <CardTitle>🌐 Dark Web Monitoring</CardTitle>
@@ -93,7 +93,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          {/* Keyword Alerts */}
+          {/* Keywords Alert */}
           <Card>
             <CardHeader>
               <CardTitle>🔍 Keywords Alert</CardTitle>
@@ -117,7 +117,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          {/* Propagation Overlay */}
+          {/* Propagation Map */}
           <Card className="md:col-span-2">
             <CardHeader>
               <CardTitle>🗺️ Propagation Overlay</CardTitle>
@@ -129,18 +129,16 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          {/* Phishing Detection + Graph */}
+          {/* Phishing Detection Graph */}
           <Card className="md:col-span-2">
             <CardHeader>
-              <CardTitle>🎣 Phishing Detection</CardTitle>
+              <CardTitle>🎯 Phishing Detection</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="mb-4 text-sm text-muted-foreground">
                 Check for phishing indicators across monitored feeds.
               </p>
-              <div className="h-48 w-full bg-muted rounded-md flex items-center justify-center text-muted-foreground">
-                [Graph Placeholder]
-              </div>
+              <PhishingChart />
             </CardContent>
           </Card>
         </div>

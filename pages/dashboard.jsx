@@ -1,4 +1,4 @@
-'use client';
+// pages/dashboard.jsx
 
 import { useState, useEffect } from 'react';
 import Sidebar from '@/components/Sidebar';
@@ -18,7 +18,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchFeeds() {
+    const fetchFeeds = async () => {
       try {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/feeds`
@@ -30,8 +30,11 @@ export default function Dashboard() {
       } finally {
         setLoading(false);
       }
-    }
+    };
+
     fetchFeeds();
+    const interval = setInterval(fetchFeeds, 5 * 60 * 1000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -54,10 +57,10 @@ export default function Dashboard() {
                 <p className="text-muted-foreground">No feeds found.</p>
               ) : (
                 <ul className="space-y-2">
-                  {feeds.map((feed, feedIdx) =>
-                    feed.items.slice(0, 5).map((item, itemIdx) => (
+                  {feeds.flatMap((feed) =>
+                    feed.items.slice(0, 5).map((item, i) => (
                       <li
-                        key={`${feedIdx}-${itemIdx}`}
+                        key={`${feed.url}-${i}`}
                         className="border-b border-border pb-2"
                       >
                         <a
@@ -148,4 +151,9 @@ export default function Dashboard() {
       </main>
     </div>
   );
+}
+
+// Turn this into an SSR page to avoid the build‐time `number is not defined` error
+export async function getServerSideProps() {
+  return { props: {} };
 }

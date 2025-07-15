@@ -1,4 +1,6 @@
 // pages/dashboard.jsx
+'use client';
+export const dynamic = 'force-dynamic';
 
 import { useState, useEffect } from 'react';
 import Sidebar from '@/components/Sidebar';
@@ -151,9 +153,4 @@ export default function Dashboard() {
       </main>
     </div>
   );
-}
-
-// Turn this into an SSR page to avoid the build‐time `number is not defined` error
-export async function getServerSideProps() {
-  return { props: {} };
 }

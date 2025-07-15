@@ -1,79 +1,78 @@
-'use client';
 
-import { useState, useEffect } from 'react';
-import Sidebar from '@/components/Sidebar';
-import FeedList from '@/components/FeedList';
-import DarkWebChecker from '@/components/DarkWebChecker';
-import ThreatScorer from '@/components/ThreatScorer';
-import PhishingChart from '@/components/PhishingChart';
 
+'use client'
+
+import Sidebar from '@/components/Sidebar'
+import FeedList from '@/components/FeedList'
+import DarkWebChecker from '@/components/DarkWebChecker'
+import ThreatScorer from '@/components/ThreatScorer'
+import PhishingChart from '@/components/PhishingChart'
 import {
   Card,
   CardHeader,
   CardTitle,
   CardContent
-} from '@/components/ui/card';
+} from '@/components/ui/card'
+import { useEffect, useState } from 'react'
 
 export default function Dashboard() {
-  const [threats, setThreats] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [feeds, setFeeds] = useState([])
+  const [loadingFeeds, setLoadingFeeds] = useState(true)
 
   useEffect(() => {
-    const fetchThreats = async () => {
+    const load = async () => {
       try {
-        const res = await fetch('/api/threats');
-        const json = await res.json();
-        setThreats(json.items || []);
-      } catch (err) {
-        console.error('Failed to fetch threats:', err);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/feeds`)
+        const json = await res.json()
+        setFeeds(json.feeds || [])
+      } catch {
       } finally {
-        setLoading(false);
+        setLoadingFeeds(false)
       }
-    };
-
-    fetchThreats();
-    const interval = setInterval(fetchThreats, 5 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, []);
+    }
+    load()
+  }, [])
 
   return (
     <div className="flex min-h-screen bg-background text-foreground">
       <Sidebar />
 
-      <main className="flex-1 p-6">
+      <main className="flex-1 p-6 xl:container xl:mx-auto">
         <h1 className="text-2xl font-bold mb-6">CrisisWatch Dashboard</h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* 🛡️ Threat Feed */}
-          <Card className="md:col-span-2">
+        <div className="grid gap-6 grid-cols-1 lg:grid-cols-3">
+          {/* Threat Feed */}
+          <Card className="lg:col-span-2">
             <CardHeader>
               <CardTitle>🛡️ Threat Feed</CardTitle>
             </CardHeader>
             <CardContent>
-              {loading ? (
-                <p className="text-muted-foreground">Loading...</p>
-              ) : threats.length === 0 ? (
-                <p className="text-muted-foreground">No threats found.</p>
+              {loadingFeeds ? (
+                <p>Loading…</p>
+              ) : feeds.length === 0 ? (
+                <p>No feeds.</p>
               ) : (
-                <ul className="space-y-3">
-                  {threats.map((item, idx) => (
-                    <li key={idx} className="border-b border-border pb-2">
-                      <a
-                        href={item.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 dark:text-blue-400 hover:underline"
-                      >
-                        {item.title}
-                      </a>
-                    </li>
-                  ))}
+                <ul className="space-y-2">
+                  {feeds.flatMap((f) =>
+                    f.items.slice(0, 5).map((i, idx) => (
+                      <li key={`${f.url}-${idx}`} className="border-b border-border pb-2">
+                        <a
+                          href={i.link}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-blue-500 hover:underline"
+                        >
+                          {i.title}
+                        </a>
+                      </li>
+                    ))
+                  )}
                 </ul>
               )}
             </CardContent>
           </Card>
 
-          {/* 📡 Manage RSS Feeds */}
+          {/* RSS */}
           <Card>
             <CardHeader>
               <CardTitle>📡 Manage RSS Feeds</CardTitle>
@@ -83,7 +82,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          {/* 🌐 Dark Web Monitoring */}
+          {/* Dark Web */}
           <Card>
             <CardHeader>
               <CardTitle>🌐 Dark Web Monitoring</CardTitle>
@@ -93,13 +92,13 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          {/* 🔍 Keywords Alert */}
+          {/* Keywords */}
           <Card>
             <CardHeader>
               <CardTitle>🔍 Keywords Alert</CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="text-sm list-disc pl-5 space-y-1 text-muted-foreground">
+              <ul className="list-disc pl-5 space-y-1 text-muted-foreground">
                 <li>malware</li>
                 <li>ransomware</li>
                 <li>data breach</li>
@@ -107,7 +106,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          {/* 🤖 Threat Scoring AI */}
+          {/* Threat Scoring */}
           <Card>
             <CardHeader>
               <CardTitle>🤖 Threat Scoring AI</CardTitle>
@@ -117,8 +116,8 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          {/* 🗺️ Propagation Overlay */}
-          <Card className="md:col-span-2">
+          {/* Propagation */}
+          <Card className="lg:col-span-2">
             <CardHeader>
               <CardTitle>🗺️ Propagation Overlay</CardTitle>
             </CardHeader>
@@ -129,21 +128,17 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          {/* 🎯 Phishing Detection */}
-          <Card className="md:col-span-2">
+          {/* Phishing */}
+          <Card className="lg:col-span-2">
             <CardHeader>
               <CardTitle>🎯 Phishing Detection</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="mb-4 text-sm text-muted-foreground">
-                Check for phishing indicators across monitored feeds.
-              </p>
               <PhishingChart />
             </CardContent>
           </Card>
         </div>
       </main>
     </div>
-  );
+  )
 }
-

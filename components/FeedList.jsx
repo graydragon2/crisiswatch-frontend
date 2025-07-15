@@ -1,45 +1,44 @@
-'use client';
+'use client'
 
-import { useState, useEffect } from 'react';
-import { BACKEND_URL } from '@/lib/api';
+import { useState, useEffect } from 'react'
+
+const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL
 
 export default function FeedList() {
-  const [feeds, setFeeds] = useState([]);
-  const [newFeed, setNewFeed] = useState('');
-  const [error, setError] = useState('');
+  const [feeds, setFeeds] = useState([])
+  const [newFeed, setNewFeed] = useState('')
+  const [error, setError] = useState('')
 
   useEffect(() => {
-    fetchFeeds();
-  }, []);
+    fetchFeeds()
+  }, [])
 
   const fetchFeeds = async () => {
     try {
-      const res = await fetch(`${BACKEND_URL}/api/feeds`);
-      if (!res.ok) throw new Error('Fetch failed');
-      const json = await res.json();
-      setFeeds(json.feeds || []);
-    } catch (err) {
-      console.error(err);
-      setError('Failed to load feeds.');
+      const res = await fetch(`${BACKEND}/api/feeds`)
+      const json = await res.json()
+      setFeeds(json.feeds || [])
+    } catch {
+      setError('Failed to load feeds.')
     }
-  };
+  }
 
   const addFeed = async () => {
-    if (!newFeed.trim()) return;
+    if (!newFeed.trim()) return
+    setError('')
     try {
-      const res = await fetch(`${BACKEND_URL}/api/feeds`, {
+      const res = await fetch(`${BACKEND}/api/feeds`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: newFeed.trim() }),
-      });
-      if (!res.ok) throw new Error('Add failed');
-      setNewFeed('');
-      fetchFeeds();
-    } catch (err) {
-      console.error(err);
-      setError('Error adding feed.');
+      })
+      if (!res.ok) throw new Error()
+      setNewFeed('')
+      fetchFeeds()
+    } catch {
+      setError('Error adding feed.')
     }
-  };
+  }
 
   return (
     <div className="space-y-2">
@@ -58,12 +57,14 @@ export default function FeedList() {
           Add
         </button>
       </div>
+
       {error && <p className="text-red-500 text-sm">{error}</p>}
+
       <ul className="list-disc ml-5 text-sm text-black dark:text-white">
-        {feeds.map((feed, idx) => (
-          <li key={idx}>{feed.title || feed.url || feed}</li>
+        {feeds.map((f, i) => (
+          <li key={i}>{f.title || f.url}</li>
         ))}
       </ul>
     </div>
-  );
+  )
 }

@@ -1,8 +1,5 @@
 // pages/dashboard.jsx
-'use client';
-export const dynamic = 'force-dynamic';
-
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from '@/components/Sidebar';
 import FeedList from '@/components/FeedList';
 import DarkWebChecker from '@/components/DarkWebChecker';
@@ -14,6 +11,11 @@ import {
   CardTitle,
   CardContent,
 } from '@/components/ui/card';
+
+// This tells Next to *always* server-render this page at request time
+export async function getServerSideProps() {
+  return { props: {} };
+}
 
 export default function Dashboard() {
   const [feeds, setFeeds] = useState([]);
@@ -59,8 +61,8 @@ export default function Dashboard() {
                 <p className="text-muted-foreground">No feeds found.</p>
               ) : (
                 <ul className="space-y-2">
-                  {feeds.flatMap((feed) =>
-                    feed.items.slice(0, 5).map((item, i) => (
+                  {feeds.flatMap(feed =>
+                    (feed.items || []).slice(0, 5).map((item, i) => (
                       <li
                         key={`${feed.url}-${i}`}
                         className="border-b border-border pb-2"

@@ -14,35 +14,33 @@ import {
 } from '@/components/ui/card';
 
 export default function Dashboard() {
-  const [threats, setThreats] = useState([]);
-  const [loadingThreats, setLoadingThreats] = useState(true);
+  const [feeds, setFeeds] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchThreats = async () => {
+    async function fetchFeeds() {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/threats`
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/feeds`
         );
         const json = await res.json();
-        setThreats(json.items || []);
+        setFeeds(json.feeds || []);
       } catch (err) {
-        console.error('Failed to fetch threats:', err);
+        console.error('Failed to load feeds:', err);
       } finally {
-        setLoadingThreats(false);
+        setLoading(false);
       }
-    };
-
-    fetchThreats();
-    const interval = setInterval(fetchThreats, 5 * 60 * 1000);
-    return () => clearInterval(interval);
+    }
+    fetchFeeds();
   }, []);
 
   return (
     <div className="flex min-h-screen bg-background text-foreground">
       <Sidebar />
 
-      <main className="flex-1 p-6 max-w-7xl mx-auto w-full">
+      <main className="flex-1 p-6">
         <h1 className="text-2xl font-bold mb-6">CrisisWatch Dashboard</h1>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* 🛡️ Threat Feed */}
           <Card className="md:col-span-2">
@@ -50,24 +48,29 @@ export default function Dashboard() {
               <CardTitle>🛡️ Threat Feed</CardTitle>
             </CardHeader>
             <CardContent>
-              {loadingThreats ? (
-                <p className="text-muted-foreground">Loading threats…</p>
-              ) : threats.length === 0 ? (
-                <p className="text-muted-foreground">No threats found.</p>
+              {loading ? (
+                <p className="text-muted-foreground">Loading feeds…</p>
+              ) : feeds.length === 0 ? (
+                <p className="text-muted-foreground">No feeds found.</p>
               ) : (
                 <ul className="space-y-2">
-                  {threats.map((item, i) => (
-                    <li key={i} className="border-b border-border pb-2">
-                      <a
-                        href={item.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 dark:text-blue-400 hover:underline"
+                  {feeds.map((feed, feedIdx) =>
+                    feed.items.slice(0, 5).map((item, itemIdx) => (
+                      <li
+                        key={`${feedIdx}-${itemIdx}`}
+                        className="border-b border-border pb-2"
                       >
-                        {item.title}
-                      </a>
-                    </li>
-                  ))}
+                        <a
+                          href={item.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 dark:text-blue-400 hover:underline"
+                        >
+                          {item.title}
+                        </a>
+                      </li>
+                    ))
+                  )}
                 </ul>
               )}
             </CardContent>

@@ -1,8 +1,12 @@
-// pages/index.jsx
-'use client'
+'use client';
 
-import Dashboard from './dashboard'
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
-  return <Dashboard />
+  const router = useRouter();
+  useEffect(() => {
+    router.replace('/dashboard');
+  }, [router]);
+  return null;
 }

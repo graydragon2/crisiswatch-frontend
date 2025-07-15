@@ -1,60 +1,58 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-
-const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL
+import { useState } from 'react';
 
 export default function ThreatScorer() {
-  const [text, setText] = useState('')
-  const [score, setScore] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [text, setText] = useState('');
+  const [score, setScore] = useState<number|null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string|null>(null);
 
-  const scoreIt = async () => {
-    if (!text.trim()) return
-    setLoading(true)
-    setScore(null)
+  const runScore = async () => {
+    if (!text.trim()) return;
+    setLoading(true);
+    setError(null);
+    setScore(null);
     try {
-      const res = await fetch(`${BACKEND}/api/score`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/score`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: text.trim() }),
-      })
-      if (!res.ok) throw await res.json()
-      const json = await res.json()
-      setScore(json.score)
+        body: JSON.stringify({ text }),
+      });
+      if (!res.ok) throw new Error(`Status ${res.status}`);
+      const json = await res.json();
+      setScore(json.score);
     } catch (err) {
-      setScore({ error: err.error || 'Error scoring.' })
+      console.error(err);
+      setError('Error scoring threat');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="space-y-2">
-      <div className="flex gap-2">
-        <input
-          type="text"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Paste headline or alert text"
-          className="flex-1 p-2 rounded bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
-        />
-        <button
-          onClick={scoreIt}
-          disabled={loading}
-          className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:opacity-50"
-        >
-          {loading ? 'Scoring…' : 'Score'}
-        </button>
-      </div>
+      <input
+        type="text"
+        placeholder="Paste headline or alert text"
+        className="w-full p-2 rounded bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+      />
+      <button
+        onClick={runScore}
+        disabled={loading}
+        className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
+      >
+        {loading ? 'Scoring…' : 'Score'}
+      </button>
 
-      {score?.error && <p className="text-red-400">{score.error}</p>}
-
-      {typeof score === 'number' && (
-        <p className="text-green-400">
-          ✅ Threat Score: <strong>{score}</strong>/10
-        </p>
+      {error && <div className="text-red-400">{error}</div>}
+      {score != null && (
+        <div className="text-green-400">
+          ✅ AI Threat Score: <strong>{score}</strong>/10
+        </div>
       )}
     </div>
-  )
+  );
 }

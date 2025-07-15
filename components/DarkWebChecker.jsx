@@ -1,66 +1,67 @@
-'use client'
 
-import { useState } from 'react'
+'use client';
 
-const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL
+import { useState } from 'react';
 
 export default function DarkWebChecker() {
-  const [email, setEmail] = useState('')
-  const [status, setStatus] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [query, setQuery] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState(null);
+  const [error, setError] = useState(null);
 
   const check = async () => {
-    if (!email.trim()) return
-    setLoading(true)
-    setStatus(null)
-
+    if (!query.trim()) return;
+    setLoading(true);
+    setError(null);
+    setResult(null);
     try {
-      const res = await fetch(`${BACKEND}/api/darkweb?email=${encodeURIComponent(email.trim())}`)
-      if (!res.ok) throw await res.json()
-      const json = await res.json()
-      setStatus(json)
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/darkweb?email=${encodeURIComponent(
+          query
+        )}`
+      );
+      if (!res.ok) throw new Error(`Status ${res.status}`);
+      const json = await res.json();
+      setResult(json);
     } catch (err) {
-      setStatus({ error: err.error || 'Failed to contact server.' })
+      console.error(err);
+      setError('Failed to contact server. Try again later.');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="space-y-2">
-      <div className="flex gap-2">
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Enter your email"
-          className="flex-1 p-2 rounded bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
-        />
-        <button
-          onClick={check}
-          disabled={loading}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
-        >
-          {loading ? 'Checking…' : 'Check Now'}
-        </button>
-      </div>
+      <input
+        type="text"
+        placeholder="Enter your email"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        className="w-full p-2 rounded bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
+      />
+      <button
+        onClick={check}
+        disabled={loading}
+        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+      >
+        {loading ? 'Checking…' : 'Check Now'}
+      </button>
 
-      {status?.error && <p className="text-yellow-400">{status.error}</p>}
-
-      {status && status.found === false && (
-        <p className="text-green-500">✅ No compromises found.</p>
+      {error && <div className="text-red-400">{error}</div>}
+      {result && result.found === false && (
+        <div className="text-green-400">✅ No compromised credentials found.</div>
       )}
-
-      {status && status.found === true && (
+      {result && result.found === true && (
         <div className="text-red-400">
-          <p>⚠️ Compromised entries:</p>
+          ⚠️ Compromised credentials:
           <ul className="list-disc ml-5">
-            {status.entries.map((e, i) => (
+            {result.entries?.map((e, i) => (
               <li key={i}>{e}</li>
             ))}
           </ul>
         </div>
       )}
     </div>
-  )
+  );
 }

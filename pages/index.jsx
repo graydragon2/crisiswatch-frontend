@@ -1,12 +1,4 @@
-'use client';
+// pages/index.jsx
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-
-export default function Home() {
-  const router = useRouter();
-  useEffect(() => {
-    router.replace('/dashboard');
-  }, [router]);
-  return null;
-}
+// Re-export the Dashboard page as the root "/" route
+export { default } from './dashboard';

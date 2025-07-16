@@ -156,3 +156,4 @@ export default function Dashboard() {
     </div>
   );
 }
+git commit -m "dashboard: switch to getServerSideProps SSR"

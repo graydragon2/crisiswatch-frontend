@@ -113,7 +113,6 @@ export default function Dashboard() {
           </Card>
 
           {/* 🤖 Threat Scoring AI */}
-          {/*}
           <Card>
             <CardHeader>
               <CardTitle>🤖 Threat Scoring AI</CardTitle>
@@ -122,7 +121,6 @@ export default function Dashboard() {
               <ThreatScorer />
             </CardContent>
           </Card>
-          */}
 
           {/* 🗺️ Propagation Overlay */}
           <Card className="md:col-span-2">

@@ -1,41 +1,40 @@
-'use client';
-
-import { useState, useEffect } from 'react';
-import Sidebar from '@/components/Sidebar';
-import FeedList from '@/components/FeedList';
-import DarkWebChecker from '@/components/DarkWebChecker';
-import ThreatScorer from '@/components/ThreatScorer';
-import PhishingChart from '@/components/PhishingChart';
+// pages/dashboard.jsx
+import { useState, useEffect } from 'react'
+import Sidebar from '@/components/Sidebar'
+import FeedList from '@/components/FeedList'
+import DarkWebChecker from '@/components/DarkWebChecker'
+import ThreatScorer from '@/components/ThreatScorer'
+import PhishingChart from '@/components/PhishingChart'
 import {
   Card,
   CardHeader,
   CardTitle,
   CardContent,
-} from '@/components/ui/card';
+} from '@/components/ui/card'
 
 export default function Dashboard() {
-  const [feeds, setFeeds] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [feeds, setFeeds] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function fetchFeeds() {
       try {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/feeds`
-        );
-        const data = await res.json();
-        setFeeds(data.feeds || []);
+        )
+        const data = await res.json()
+        setFeeds(data.feeds || [])
       } catch (err) {
-        console.error('Failed to fetch feeds:', err);
+        console.error('Failed to fetch feeds:', err)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
     }
 
-    fetchFeeds();
-    const interval = setInterval(fetchFeeds, 5 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, []);
+    fetchFeeds()
+    const interval = setInterval(fetchFeeds, 5 * 60 * 1000)
+    return () => clearInterval(interval)
+  }, [])
 
   return (
     <div className="flex min-h-screen bg-background text-foreground">
@@ -58,7 +57,7 @@ export default function Dashboard() {
               ) : (
                 <ul className="space-y-2">
                   {feeds.flatMap(feed =>
-                    feed.items.slice(0, 5).map((item, idx) => (
+                    (feed.items || []).slice(0, 5).map((item, idx) => (
                       <li
                         key={`${feed.url}-${idx}`}
                         className="border-b border-border pb-2"
@@ -150,5 +149,5 @@ export default function Dashboard() {
         </div>
       </main>
     </div>
-  );
+  )
 }

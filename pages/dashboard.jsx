@@ -1,5 +1,6 @@
-// pages/dashboard.jsx
-import React, { useState, useEffect } from 'react';
+'use client';
+
+import { useState, useEffect } from 'react';
 import Sidebar from '@/components/Sidebar';
 import FeedList from '@/components/FeedList';
 import DarkWebChecker from '@/components/DarkWebChecker';
@@ -12,17 +13,12 @@ import {
   CardContent,
 } from '@/components/ui/card';
 
-// This tells Next to *always* server-render this page at request time
-export async function getServerSideProps() {
-  return { props: {} };
-}
-
 export default function Dashboard() {
   const [feeds, setFeeds] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchFeeds = async () => {
+    async function fetchFeeds() {
       try {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/feeds`
@@ -30,11 +26,11 @@ export default function Dashboard() {
         const json = await res.json();
         setFeeds(json.feeds || []);
       } catch (err) {
-        console.error('Failed to load feeds:', err);
+        console.error('Failed to fetch feeds:', err);
       } finally {
         setLoading(false);
       }
-    };
+    }
 
     fetchFeeds();
     const interval = setInterval(fetchFeeds, 5 * 60 * 1000);
@@ -45,7 +41,8 @@ export default function Dashboard() {
     <div className="flex min-h-screen bg-background text-foreground">
       <Sidebar />
 
-      <main className="flex-1 p-6">
+      {/* center and constrain the main content */}
+      <main className="flex-1 p-6 max-w-7xl mx-auto">
         <h1 className="text-2xl font-bold mb-6">CrisisWatch Dashboard</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -62,7 +59,7 @@ export default function Dashboard() {
               ) : (
                 <ul className="space-y-2">
                   {feeds.flatMap(feed =>
-                    (feed.items || []).slice(0, 5).map((item, i) => (
+                    feed.items.slice(0, 5).map((item, i) => (
                       <li
                         key={`${feed.url}-${i}`}
                         className="border-b border-border pb-2"
@@ -156,4 +153,3 @@ export default function Dashboard() {
     </div>
   );
 }
-git commit -m "dashboard: switch to getServerSideProps SSR"

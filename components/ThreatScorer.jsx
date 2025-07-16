@@ -1,33 +1,33 @@
-
 'use client';
 
 import { useState } from 'react';
 
 export default function ThreatScorer() {
-  const [text, setText] = useState('');
-  const [score, setScore] = useState(null);    // remove <number|null>
+  const [text, setText]       = useState('');
+  const [score, setScore]     = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);    // remove <string|null>
+  const [error, setError]     = useState(null);
 
   const runScore = async () => {
     if (!text.trim()) return;
     setLoading(true);
     setError(null);
     setScore(null);
+
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/score`,
         {
-          method: 'POST',
+          method:  'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text }),
+          body:    JSON.stringify({ text }),
         }
       );
-      if (!res.ok) throw new Error(`Status ${res.status}`);
-      const json = await res.json();
-      setScore(json.score);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const { score } = await res.json();
+      setScore(score);
     } catch (err) {
-      console.error(err);
+      console.error('score error ▶', err);
       setError('Error scoring threat');
     } finally {
       setLoading(false);

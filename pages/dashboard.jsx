@@ -23,8 +23,8 @@ export default function Dashboard() {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/feeds`
         );
-        const json = await res.json();
-        setFeeds(json.feeds || []);
+        const data = await res.json();
+        setFeeds(data.feeds || []);
       } catch (err) {
         console.error('Failed to fetch feeds:', err);
       } finally {
@@ -41,7 +41,6 @@ export default function Dashboard() {
     <div className="flex min-h-screen bg-background text-foreground">
       <Sidebar />
 
-      {/* center and constrain the main content */}
       <main className="flex-1 p-6 max-w-7xl mx-auto">
         <h1 className="text-2xl font-bold mb-6">CrisisWatch Dashboard</h1>
 
@@ -59,9 +58,9 @@ export default function Dashboard() {
               ) : (
                 <ul className="space-y-2">
                   {feeds.flatMap(feed =>
-                    feed.items.slice(0, 5).map((item, i) => (
+                    feed.items.slice(0, 5).map((item, idx) => (
                       <li
-                        key={`${feed.url}-${i}`}
+                        key={`${feed.url}-${idx}`}
                         className="border-b border-border pb-2"
                       >
                         <a

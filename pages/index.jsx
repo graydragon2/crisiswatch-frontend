@@ -1,4 +1,14 @@
 // pages/index.jsx
 
-// Re-export the Dashboard page as the root "/" route
-export { default } from './dashboard';
+export function getServerSideProps() {
+  return {
+    redirect: {
+      destination: '/dashboard',
+      permanent: false,
+    },
+  }
+}
+
+export default function Home() {
+  return null
+}

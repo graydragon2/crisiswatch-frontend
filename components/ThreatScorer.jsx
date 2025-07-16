@@ -15,14 +15,12 @@ export default function ThreatScorer() {
     setScore(null);
 
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/score`,
-        {
-          method:  'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ text }),
-        }
-      );
+      // ◀︎ Local Next.js API route
+      const res = await fetch('/api/score', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text }),
+      });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const { score } = await res.json();
       setScore(score);

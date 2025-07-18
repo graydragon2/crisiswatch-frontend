@@ -1,7 +1,7 @@
 
 'use client'
 
-import Sidebar from '@/components/Sidebar'
+import { Sidebar } from '@/components/Sidebar';
 import DarkWebChecker from '@/components/DarkWebChecker'
 
 export default function DarkWebPage() {

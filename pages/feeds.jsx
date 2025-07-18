@@ -1,7 +1,7 @@
 
 'use client';
 
-import Sidebar from '../components/Sidebar';
+import { Sidebar } from '@/components/Sidebar';
 import FeedList from '../components/FeedList';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/card';
 

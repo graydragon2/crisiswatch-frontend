@@ -1,7 +1,6 @@
 // /pages/api/feeds.js
 import fs from 'fs';
 import path from 'path';
-import { Sidebar } from '../components/Sidebar';
 
 
 const feedsFile = path.resolve('./pages/api/data/feeds.json');

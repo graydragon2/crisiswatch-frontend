@@ -1,47 +1,48 @@
-'use client';
-
+// components/PhishingChart.jsx
+import { Line } from 'react-chartjs-2';
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
+  Chart as ChartJS,
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
   Tooltip,
-  ResponsiveContainer
-} from 'recharts';
+} from 'chart.js';
 
-const data = [
-  { name: 'Mon', detections: 2 },
-  { name: 'Tue', detections: 5 },
-  { name: 'Wed', detections: 3 },
-  { name: 'Thu', detections: 7 },
-  { name: 'Fri', detections: 4 },
-  { name: 'Sat', detections: 1 },
-  { name: 'Sun', detections: 3 },
-];
+ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip);
+
+const data = {
+  labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+  datasets: [
+    {
+      label: 'Phishing Incidents',
+      data: [2, 4, 3, 6, 5, 8],
+      borderColor: '#3b82f6',
+      backgroundColor: 'rgba(59, 130, 246, 0.2)',
+      tension: 0.4,
+      fill: true,
+    },
+  ],
+};
+
+const options = {
+  responsive: true,
+  plugins: {
+    legend: { display: false },
+  },
+  scales: {
+    y: { beginAtZero: true },
+  },
+};
 
 export default function PhishingChart() {
   return (
-    <>
-      <p>Chart loading test</p> {/* <-- force something visible */}
-      <ResponsiveContainer width="100%" height={200}>
-        <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#888" />
-          <XAxis dataKey="name" stroke="#888" />
-          <YAxis stroke="#888" />
-          <Tooltip />
-          <Line
-            type="monotone"
-            dataKey="detections"
-            stroke="#8884d8"
-            strokeWidth={2}
-            dot={{ r: 4 }}
-            activeDot={{ r: 6 }}
-          />
-        </LineChart>
-      </ResponsiveContainer>
-    </>
+    <div className="bg-gray-800 p-4 rounded-xl shadow">
+      <h3 className="text-lg font-semibold mb-2 text-white">Phishing Detection</h3>
+      <Line data={data} options={options} />
+    </div>
   );
 }
+
 
 

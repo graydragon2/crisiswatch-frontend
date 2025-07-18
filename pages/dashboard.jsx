@@ -1,153 +1,49 @@
-// pages/dashboard.jsx
-import { useState, useEffect } from 'react'
-import Sidebar from '@/components/Sidebar'
-import FeedList from '@/components/FeedList'
-import DarkWebChecker from '@/components/DarkWebChecker'
-import ThreatScorer from '@/components/ThreatScorer'
-import PhishingChart from '@/components/PhishingChart'
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from '@/components/ui/card'
+'use client';
 
-export default function Dashboard() {
-  const [feeds, setFeeds] = useState([])
-  const [loading, setLoading] = useState(true)
+import { useState } from 'react';
+import ThreatFeedCard from '@/components/ThreatFeedCard';
+import FeedList from '@/components/FeedList';
 
-  useEffect(() => {
-    async function fetchFeeds() {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/feeds`
-        )
-        const data = await res.json()
-        setFeeds(data.feeds || [])
-      } catch (err) {
-        console.error('Failed to fetch feeds:', err)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchFeeds()
-    const interval = setInterval(fetchFeeds, 5 * 60 * 1000)
-    return () => clearInterval(interval)
-  }, [])
+export default function DashboardPage() {
+  const [showFeeds, setShowFeeds] = useState(true);
 
   return (
-    <div className="flex min-h-screen bg-background text-foreground">
-      <Sidebar />
+    <div className="p-4 max-w-5xl mx-auto space-y-8">
+      <section className="bg-white dark:bg-gray-900 rounded-2xl shadow p-6">
+        <h1 className="text-3xl font-bold mb-4 text-black dark:text-white">🧠 CrisisWatch Dashboard</h1>
+        <p className="text-gray-600 dark:text-gray-300 mb-4">
+          Monitor real-time threats, RSS feeds, and AI-analyzed news for situational awareness.
+        </p>
 
-      <main className="flex-1 p-6 max-w-7xl mx-auto">
-        <h1 className="text-2xl font-bold mb-6">CrisisWatch Dashboard</h1>
+        <ThreatFeedCard />
+      </section>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* 🛡️ Threat Feed */}
-          <Card className="md:col-span-2">
-            <CardHeader>
-              <CardTitle>🛡️ Threat Feed</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {loading ? (
-                <p className="text-muted-foreground">Loading feeds…</p>
-              ) : feeds.length === 0 ? (
-                <p className="text-muted-foreground">No feeds found.</p>
-              ) : (
-                <ul className="space-y-2">
-                  {feeds.flatMap(feed =>
-                    (feed.items || []).slice(0, 5).map((item, idx) => (
-                      <li
-                        key={`${feed.url}-${idx}`}
-                        className="border-b border-border pb-2"
-                      >
-                        <a
-                          href={item.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 dark:text-blue-400 hover:underline"
-                        >
-                          {item.title}
-                        </a>
-                      </li>
-                    ))
-                  )}
-                </ul>
-              )}
-            </CardContent>
-          </Card>
+      {showFeeds && (
+        <section className="bg-white dark:bg-gray-900 rounded-2xl shadow p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold text-black dark:text-white">📰 RSS Feeds</h2>
+            <button
+              className="px-3 py-1 rounded-md text-sm bg-gray-800 text-white hover:bg-gray-700"
+              onClick={() => setShowFeeds(false)}
+            >
+              Hide Feeds
+            </button>
+          </div>
+          <FeedList />
+        </section>
+      )}
 
-          {/* 📡 Manage RSS Feeds */}
-          <Card>
-            <CardHeader>
-              <CardTitle>📡 Manage RSS Feeds</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <FeedList />
-            </CardContent>
-          </Card>
-
-          {/* 🌐 Dark Web Monitoring */}
-          <Card>
-            <CardHeader>
-              <CardTitle>🌐 Dark Web Monitoring</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <DarkWebChecker />
-            </CardContent>
-          </Card>
-
-          {/* 🔍 Keywords Alert */}
-          <Card>
-            <CardHeader>
-              <CardTitle>🔍 Keywords Alert</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="text-sm list-disc pl-5 space-y-1 text-muted-foreground">
-                <li>malware</li>
-                <li>ransomware</li>
-                <li>data breach</li>
-              </ul>
-            </CardContent>
-          </Card>
-
-          {/* 🤖 Threat Scoring AI */}
-          <Card>
-            <CardHeader>
-              <CardTitle>🤖 Threat Scoring AI</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ThreatScorer />
-            </CardContent>
-          </Card>
-
-          {/* 🗺️ Propagation Overlay */}
-          <Card className="md:col-span-2">
-            <CardHeader>
-              <CardTitle>🗺️ Propagation Overlay</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-48 bg-muted rounded-md flex items-center justify-center text-muted-foreground">
-                [Map Placeholder]
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* 🎯 Phishing Detection */}
-          <Card className="md:col-span-2">
-            <CardHeader>
-              <CardTitle>🎯 Phishing Detection</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="mb-4 text-sm text-muted-foreground">
-                Check for phishing indicators across monitored feeds.
-              </p>
-              <PhishingChart />
-            </CardContent>
-          </Card>
+      {!showFeeds && (
+        <div className="text-center">
+          <button
+            onClick={() => setShowFeeds(true)}
+            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            Show Feeds Again
+          </button>
         </div>
-      </main>
+      )}
     </div>
-  )
+  );
 }
+

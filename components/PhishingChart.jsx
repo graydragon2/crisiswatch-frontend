@@ -1,47 +1,40 @@
-// components/PhishingChart.jsx
-import { Line } from 'react-chartjs-2';
 import {
-  Chart as ChartJS,
-  LineElement,
-  CategoryScale,
-  LinearScale,
-  PointElement,
+  LineChart,
+  Line,
+  CartesianGrid,
+  XAxis,
+  YAxis,
   Tooltip,
-} from 'chart.js';
+  ResponsiveContainer,
+} from 'recharts';
 
-ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip);
-
-const data = {
-  labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-  datasets: [
-    {
-      label: 'Phishing Incidents',
-      data: [2, 4, 3, 6, 5, 8],
-      borderColor: '#3b82f6',
-      backgroundColor: 'rgba(59, 130, 246, 0.2)',
-      tension: 0.4,
-      fill: true,
-    },
-  ],
-};
-
-const options = {
-  responsive: true,
-  plugins: {
-    legend: { display: false },
-  },
-  scales: {
-    y: { beginAtZero: true },
-  },
-};
+const data = [
+  { name: 'Mon', threats: 2 },
+  { name: 'Tue', threats: 3 },
+  { name: 'Wed', threats: 4 },
+  { name: 'Thu', threats: 6 },
+  { name: 'Fri', threats: 3 },
+  { name: 'Sat', threats: 2 },
+  { name: 'Sun', threats: 5 },
+];
 
 export function PhishingChart() {
   return (
-    <div>
-      <p className="text-sm text-muted-foreground">Phishing analysis coming soon.</p>
+    <div className="bg-gray-800 p-4 rounded-xl shadow h-64">
+      <h3 className="text-lg font-semibold mb-2 text-white">Phishing Detection</h3>
+      <ResponsiveContainer width="100%" height="90%">
+        <LineChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#4a5568" />
+          <XAxis dataKey="name" stroke="#cbd5e0" />
+          <YAxis stroke="#cbd5e0" />
+          <Tooltip />
+          <Line type="monotone" dataKey="threats" stroke="#63b3ed" />
+        </LineChart>
+      </ResponsiveContainer>
     </div>
   );
 }
+
 
 
 

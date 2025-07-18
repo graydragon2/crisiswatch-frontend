@@ -35,11 +35,10 @@ const options = {
   },
 };
 
-export default function PhishingChart() {
+export function PhishingChart() {
   return (
-    <div className="bg-gray-800 p-4 rounded-xl shadow">
-      <h3 className="text-lg font-semibold mb-2 text-white">Phishing Detection</h3>
-      <Line data={data} options={options} />
+    <div>
+      <p className="text-sm text-muted-foreground">Phishing analysis coming soon.</p>
     </div>
   );
 }

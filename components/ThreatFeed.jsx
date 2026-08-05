@@ -9,7 +9,7 @@ export default function ThreatFeed() {
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/threats`);
         const data = await res.json();
-        setThreats(data.items || []);
+        setThreats(data.threats || []);
       } catch (err) {
         console.error('Failed to fetch threats:', err);
       } finally {

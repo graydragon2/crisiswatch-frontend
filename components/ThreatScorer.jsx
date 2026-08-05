@@ -15,8 +15,7 @@ export default function ThreatScorer() {
     setScore(null);
 
     try {
-      // ◀︎ Local Next.js API route
-      const res = await fetch('/api/score', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/score`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text }),

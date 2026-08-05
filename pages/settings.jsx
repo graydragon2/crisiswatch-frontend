@@ -2,18 +2,21 @@
 
 import { Sidebar } from '@/components/Sidebar';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/card';
+import ThreatScorer from '@/components/ThreatScorer';
 
 export default function SettingsPage() {
   return (
-    <div className="flex min-h-screen bg-background text-foreground">
+    <div className="flex flex-col md:block min-h-screen bg-background text-foreground">
       <Sidebar />
-      <main className="flex-1 p-6">
+      <main className="md:ml-64 flex-1 p-6">
         <h1 className="text-2xl font-bold mb-6">⚙️ Settings</h1>
         <Card>
           <CardHeader>
-            <CardTitle>Settings</CardTitle>
+            <CardTitle>Manual Threat Scorer</CardTitle>
           </CardHeader>
-          <CardContent>Coming soon…</CardContent>
+          <CardContent>
+            <ThreatScorer />
+          </CardContent>
         </Card>
       </main>
     </div>

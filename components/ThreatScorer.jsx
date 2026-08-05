@@ -36,7 +36,7 @@ export default function ThreatScorer() {
       <input
         type="text"
         placeholder="Paste headline or alert text"
-        className="w-full p-2 rounded bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
+        className="w-full p-2 rounded bg-gray-800 text-white placeholder-gray-500 border border-white/10"
         value={text}
         onChange={(e) => setText(e.target.value)}
       />

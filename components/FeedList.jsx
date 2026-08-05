@@ -48,7 +48,7 @@ export default function FeedList() {
           value={newFeed}
           onChange={(e) => setNewFeed(e.target.value)}
           placeholder="Add new RSS feed URL"
-          className="flex-1 p-2 rounded bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
+          className="flex-1 p-2 rounded bg-gray-800 text-white placeholder-gray-500 border border-white/10"
         />
         <button
           onClick={addFeed}
@@ -60,7 +60,7 @@ export default function FeedList() {
 
       {error && <p className="text-red-500 text-sm">{error}</p>}
 
-      <ul className="list-disc ml-5 text-sm text-black dark:text-white">
+      <ul className="list-disc ml-5 text-sm text-gray-300">
         {feeds.map((f, i) => (
           <li key={i}>{f.title || f.url}</li>
         ))}

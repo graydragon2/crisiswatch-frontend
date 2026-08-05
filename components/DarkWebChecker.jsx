@@ -38,7 +38,7 @@ export default function DarkWebChecker() {
         placeholder="Enter your email"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        className="w-full p-2 rounded bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
+        className="w-full p-2 rounded bg-gray-800 text-white placeholder-gray-500 border border-white/10"
       />
       <button
         onClick={check}

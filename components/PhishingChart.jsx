@@ -20,9 +20,8 @@ const data = [
 
 export function PhishingChart() {
   return (
-    <div className="bg-gray-800 p-4 rounded-xl shadow h-64">
-      <h3 className="text-lg font-semibold mb-2 text-white">Phishing Detection</h3>
-      <ResponsiveContainer width="100%" height="90%">
+    <div className="h-48">
+      <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="#4a5568" />
           <XAxis dataKey="name" stroke="#cbd5e0" />
@@ -34,7 +33,3 @@ export function PhishingChart() {
     </div>
   );
 }
-
-
-
-

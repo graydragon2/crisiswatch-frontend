@@ -20,12 +20,12 @@ export default function DarkWebChecker() {
           query
         )}`
       );
-      if (!res.ok) throw new Error(`Status ${res.status}`);
-      const json = await res.json();
+      const json = await res.json().catch(() => null);
+      if (!res.ok) throw new Error(json?.error || `Status ${res.status}`);
       setResult(json);
     } catch (err) {
       console.error(err);
-      setError('Failed to contact server. Try again later.');
+      setError(err.message || 'Failed to contact server. Try again later.');
     } finally {
       setLoading(false);
     }

@@ -8,9 +8,9 @@ import { PropagationMap } from '@/components/PropagationMap';
 
 export default function DashboardPage() {
   return (
-    <div className="flex">
+    <div className="flex flex-col md:block">
       <Sidebar />
-      <main className="ml-64 flex-1 p-6 space-y-6 bg-gray-950 min-h-screen">
+      <main className="md:ml-64 flex-1 p-6 space-y-6 bg-gray-950 min-h-screen">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
           <div className="bg-gray-800 rounded-2xl shadow p-6">
             <h2 className="text-xl font-bold text-white mb-2">Threat Feed</h2>

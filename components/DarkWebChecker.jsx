@@ -20,12 +20,12 @@ export default function DarkWebChecker() {
           query
         )}`
       );
-      if (!res.ok) throw new Error(`Status ${res.status}`);
-      const json = await res.json();
+      const json = await res.json().catch(() => null);
+      if (!res.ok) throw new Error(json?.error || `Status ${res.status}`);
       setResult(json);
     } catch (err) {
       console.error(err);
-      setError('Failed to contact server. Try again later.');
+      setError(err.message || 'Failed to contact server. Try again later.');
     } finally {
       setLoading(false);
     }
@@ -38,7 +38,7 @@ export default function DarkWebChecker() {
         placeholder="Enter your email"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        className="w-full p-2 rounded bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
+        className="w-full p-2 rounded bg-gray-800 text-white placeholder-gray-500 border border-white/10"
       />
       <button
         onClick={check}

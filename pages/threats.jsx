@@ -33,7 +33,7 @@ export default function ThreatsPage() {
   }, []);
 
   return (
-    <div className="flex flex-col md:block min-h-screen bg-background text-foreground">
+    <div className="flex flex-col md:block min-h-screen bg-gray-950 text-white">
       <Sidebar />
       <main className="md:ml-64 flex-1 p-6">
         <h1 className="text-2xl font-semibold mb-4">Threat Feed</h1>
@@ -46,7 +46,7 @@ export default function ThreatsPage() {
               value={keywords}
               onChange={(e) => setKeywords(e.target.value)}
               placeholder="attack, power outage"
-              className="mt-1 p-2 w-full border rounded bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
+              className="mt-1 p-2 w-full border rounded bg-gray-800 text-white placeholder-gray-500 border-white/10"
             />
           </label>
 
@@ -57,7 +57,7 @@ export default function ThreatsPage() {
               value={sources}
               onChange={(e) => setSources(e.target.value)}
               placeholder="BBC, Reuters"
-              className="mt-1 p-2 w-full border rounded bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
+              className="mt-1 p-2 w-full border rounded bg-gray-800 text-white placeholder-gray-500 border-white/10"
             />
           </label>
 

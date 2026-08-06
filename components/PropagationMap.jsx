@@ -4,8 +4,10 @@
 import { useEffect, useState } from 'react';
 import { ComposableMap, Geographies, Geography, Marker } from 'react-simple-maps';
 
-const geoUrl =
-  'https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json';
+// jsDelivr-hosted world-atlas package — the source react-simple-maps itself
+// recommends, and far more reliable than pointing at a random GitHub user's
+// raw file (which is what this pointed at before and was failing to load).
+const geoUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
 
 function severityColor(score) {
   if (score >= 8) return '#ef4444'; // red

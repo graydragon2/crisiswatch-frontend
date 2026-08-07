@@ -9,7 +9,7 @@ export default function SettingsPage() {
     <div className="flex flex-col md:block min-h-screen bg-gray-950 text-white">
       <Sidebar />
       <main className="md:ml-64 flex-1 p-6">
-        <h1 className="text-2xl font-bold mb-6">⚙️ Settings</h1>
+        <h1 className="text-2xl font-bold mb-6">📟 Threat Scorer</h1>
         <Card>
           <CardHeader>
             <CardTitle>Manual Threat Scorer</CardTitle>

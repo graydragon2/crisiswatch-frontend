@@ -1,13 +1,13 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { LayoutDashboard, Rss, AlertTriangle, Eye, Settings, Shield } from 'lucide-react';
+import { LayoutDashboard, Rss, AlertTriangle, Eye, Gauge, Shield } from 'lucide-react';
 
 const LINKS = [
   { href: '/dashboard', label: 'Dashboard', Icon: LayoutDashboard },
   { href: '/feeds', label: 'Feeds', Icon: Rss },
   { href: '/threats', label: 'Threats', Icon: AlertTriangle },
   { href: '/darkweb', label: 'Dark Web', Icon: Eye },
-  { href: '/settings', label: 'Settings', Icon: Settings },
+  { href: '/settings', label: 'Threat Scorer', Icon: Gauge },
   { href: '/admin', label: 'Admin Panel', Icon: Shield },
 ];
 

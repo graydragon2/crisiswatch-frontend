@@ -11,13 +11,19 @@ function severityColor(score) {
   return 'bg-green-500';
 }
 
+const FETCH_TIMEOUT_MS = 30000;
+
 export default function RssHighlights() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [scored, setScored] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/threats?useAI=true`)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/threats?useAI=true`, { signal: controller.signal })
       .then((res) => res.json())
       .then((data) => {
         const all = data.threats || [];
@@ -32,14 +38,27 @@ export default function RssHighlights() {
         );
         setItems(all.slice(0, DISPLAY_LIMIT));
       })
-      .catch(() => setItems([]))
-      .finally(() => setLoading(false));
+      .catch(() => {
+        setItems([]);
+        setError(true);
+      })
+      .finally(() => {
+        clearTimeout(timeoutId);
+        setLoading(false);
+      });
+
+    return () => {
+      clearTimeout(timeoutId);
+      controller.abort();
+    };
   }, []);
 
   return (
     <div className="space-y-3">
       {loading ? (
         <p className="text-sm text-gray-500">Loading…</p>
+      ) : error ? (
+        <p className="text-sm text-red-400">Failed to load feed items. Try refreshing.</p>
       ) : items.length === 0 ? (
         <p className="text-sm text-gray-500">No recent items.</p>
       ) : (

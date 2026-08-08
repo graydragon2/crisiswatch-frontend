@@ -5,6 +5,7 @@ import { Sidebar } from '@/components/Sidebar';
 import Header from '@/components/Header';
 import RssHighlights from '@/components/RssHighlights';
 import KeywordAlerts from '@/components/KeywordAlerts';
+import LocationWatch from '@/components/LocationWatch';
 import { PhishingChart } from '@/components/PhishingChart';
 import { PropagationMap } from '@/components/PropagationMap';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -67,6 +68,15 @@ export default function DashboardPage() {
                 </CardHeader>
                 <CardContent>
                   <PropagationMap />
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Watched Locations</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <LocationWatch />
                 </CardContent>
               </Card>
             </div>

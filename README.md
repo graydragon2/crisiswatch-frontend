@@ -18,7 +18,7 @@ npm run dev
 
 ## Pages
 
-- `/dashboard` — main overview: RSS highlights, dark web check shortcut, Keywords Alert widget, phishing detection chart, and the Propagation Overlay map.
+- `/dashboard` — main overview: RSS highlights, dark web check shortcut, Keywords Alert widget, phishing detection chart, the Propagation Overlay map, and Watched Locations (add a zip code to track its active NWS weather alerts and local news, scored by severity).
 - `/threats` — full threat feed with keyword/source filters.
 - `/feeds` — manage tracked RSS feed sources.
 - `/darkweb` — check an email against known credential leaks.

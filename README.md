@@ -23,7 +23,7 @@ npm run dev
 - `/feeds` — manage tracked RSS feed sources.
 - `/darkweb` — check an email against known credential leaks.
 - `/settings` — ad-hoc text threat scoring.
-- `/admin` — admin panel.
+- `/admin` — system status (backend/API config health, feed fetch success/failure) and email alert settings (enable, set recipient, send a test email).
 
 ## Notes
 

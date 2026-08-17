@@ -1,13 +1,15 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Sidebar } from '@/components/Sidebar';
+import Link from 'next/link';
+import AppShell from '@/components/AppShell';
+import EmailAlertsSettings from '@/components/EmailAlertsSettings';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/card';
 
 function StatusBadge({ ok, label }) {
   return (
-    <span className={`inline-flex items-center gap-1.5 text-sm ${ok ? 'text-green-400' : 'text-red-400'}`}>
-      <span className={`h-2 w-2 rounded-full ${ok ? 'bg-green-400' : 'bg-red-400'}`} />
+    <span className={`inline-flex items-center gap-1.5 text-sm ${ok ? 'text-low' : 'text-critical'}`}>
+      <span className={`h-2 w-2 rounded-full ${ok ? 'bg-low' : 'bg-critical'}`} />
       {label}
     </span>
   );
@@ -19,9 +21,9 @@ export default function AdminPage() {
   const [feeds, setFeeds] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const backend = process.env.NEXT_PUBLIC_BACKEND_URL;
+  const backend = process.env.NEXT_PUBLIC_BACKEND_URL;
 
+  useEffect(() => {
     Promise.all([
       fetch(`${backend}/`).then((r) => setBackendUp(r.ok)).catch(() => setBackendUp(false)),
       fetch(`${backend}/api/status`).then((r) => r.json()).then(setStatus).catch(() => setStatus(null)),
@@ -32,13 +34,12 @@ export default function AdminPage() {
   const failingFeeds = (feeds || []).filter((f) => f.ok === false);
 
   return (
-    <div className="flex flex-col md:block min-h-screen bg-gray-950 text-white">
-      <Sidebar />
-      <main className="md:ml-64 flex-1 p-6 space-y-6">
-        <h1 className="text-2xl font-bold mb-2">🛠️ Admin Panel</h1>
+    <AppShell>
+      <div className="space-y-6">
+        <h1 className="text-2xl font-bold mb-2 text-foreground">🛠️ Admin Panel</h1>
 
         {loading ? (
-          <p className="text-gray-400">Checking system status…</p>
+          <p className="text-muted-foreground">Checking system status…</p>
         ) : (
           <>
             <Card>
@@ -69,12 +70,20 @@ export default function AdminPage() {
                         label={status.leakcheckConfigured ? 'LEAKCHECK_API_KEY configured' : 'LEAKCHECK_API_KEY missing — Dark Web check disabled'}
                       />
                     </div>
+                    <div>
+                      <StatusBadge
+                        ok={status.mailerConfigured}
+                        label={status.mailerConfigured ? 'SMTP_USER/SMTP_PASS configured' : 'SMTP_USER/SMTP_PASS missing — email alerts disabled'}
+                      />
+                    </div>
                   </>
                 ) : (
-                  <p className="text-red-400 text-sm">Could not reach /api/status.</p>
+                  <p className="text-critical text-sm">Could not reach /api/status.</p>
                 )}
               </CardContent>
             </Card>
+
+            <EmailAlertsSettings />
 
             <Card>
               <CardHeader>
@@ -82,13 +91,13 @@ export default function AdminPage() {
               </CardHeader>
               <CardContent className="space-y-2">
                 {feeds && (
-                  <p className="text-sm text-gray-300">
+                  <p className="text-sm text-muted-foreground">
                     {feeds.length - failingFeeds.length} / {feeds.length} feeds fetching successfully
                     {status && ` · ${status.keywordCount} keyword${status.keywordCount === 1 ? '' : 's'} watched`}
                   </p>
                 )}
                 {failingFeeds.length > 0 && (
-                  <ul className="text-sm text-red-400 list-disc ml-5">
+                  <ul className="text-sm text-critical list-disc ml-5">
                     {failingFeeds.map((f) => (
                       <li key={f.url}>
                         {f.title} — {f.error}
@@ -98,9 +107,20 @@ export default function AdminPage() {
                 )}
               </CardContent>
             </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>More Tools</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Link href="/settings" className="text-sm text-primary hover:underline">
+                  Manual Threat Scorer →
+                </Link>
+              </CardContent>
+            </Card>
           </>
         )}
-      </main>
-    </div>
+      </div>
+    </AppShell>
   );
 }

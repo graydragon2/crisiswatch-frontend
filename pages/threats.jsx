@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Sidebar } from '@/components/Sidebar';
+import AppShell from '@/components/AppShell';
 
 export default function ThreatsPage() {
   const [threats, setThreats] = useState([]);
@@ -33,10 +33,8 @@ export default function ThreatsPage() {
   }, []);
 
   return (
-    <div className="flex flex-col md:block min-h-screen bg-gray-950 text-white">
-      <Sidebar />
-      <main className="md:ml-64 flex-1 p-6">
-        <h1 className="text-2xl font-semibold mb-4">Threat Feed</h1>
+    <AppShell>
+      <h1 className="text-2xl font-semibold mb-4 text-foreground">Threat Feed</h1>
 
         <div className="mb-4 space-y-2 max-w-xl">
           <label className="block">
@@ -88,7 +86,6 @@ export default function ThreatsPage() {
             </li>
           ))}
         </ul>
-      </main>
-    </div>
+    </AppShell>
   );
 }

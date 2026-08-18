@@ -38,22 +38,22 @@ export default function DarkWebChecker() {
         placeholder="Enter your email"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        className="w-full p-2 rounded bg-gray-800 text-white placeholder-gray-500 border border-white/10"
+        className="w-full p-2 rounded bg-white/5 text-card-foreground placeholder-muted-foreground border border-border"
       />
       <button
         onClick={check}
         disabled={loading}
-        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        className="px-4 py-2 bg-primary text-white rounded hover:opacity-90"
       >
         {loading ? 'Checking…' : 'Check Now'}
       </button>
 
-      {error && <div className="text-red-400">{error}</div>}
+      {error && <div className="text-critical">{error}</div>}
       {result && result.found === false && (
-        <div className="text-green-400">✅ No compromised credentials found.</div>
+        <div className="text-low">✅ No compromised credentials found.</div>
       )}
       {result && result.found === true && (
-        <div className="text-red-400">
+        <div className="text-critical">
           ⚠️ Compromised credentials:
           <ul className="list-disc ml-5">
             {result.entries?.map((e, i) => (
@@ -62,6 +62,9 @@ export default function DarkWebChecker() {
           </ul>
         </div>
       )}
+      <p className="text-xs text-muted-foreground">
+        This check is on-demand only — the email you enter here isn't stored.
+      </p>
     </div>
   );
 }

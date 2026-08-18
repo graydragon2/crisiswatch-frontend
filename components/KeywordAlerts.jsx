@@ -77,11 +77,11 @@ export default function KeywordAlerts({ compact = false }) {
           onChange={(e) => setNewKeyword(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && addKeyword()}
           placeholder="Add a keyword to watch"
-          className="flex-1 p-2 rounded bg-gray-800 text-white text-sm placeholder-gray-500 border border-white/10"
+          className="flex-1 p-2 rounded bg-white/5 text-card-foreground text-sm placeholder-muted-foreground border border-border"
         />
         <button
           onClick={addKeyword}
-          className="px-3 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+          className="px-3 py-2 bg-primary text-white text-sm rounded hover:opacity-90"
         >
           Add
         </button>
@@ -92,10 +92,10 @@ export default function KeywordAlerts({ compact = false }) {
           {keywords.map((k) => (
             <li
               key={k}
-              className="flex items-center gap-1 bg-white/5 text-gray-200 text-xs px-2 py-1 rounded-full"
+              className="flex items-center gap-1 bg-white/5 text-card-foreground text-xs px-2 py-1 rounded-full"
             >
               {k}
-              <button onClick={() => removeKeyword(k)} aria-label={`Remove ${k}`} className="hover:text-red-400">
+              <button onClick={() => removeKeyword(k)} aria-label={`Remove ${k}`} className="hover:text-critical">
                 <X size={12} />
               </button>
             </li>
@@ -105,13 +105,13 @@ export default function KeywordAlerts({ compact = false }) {
 
       <div>
         {loading ? (
-          <p className="text-sm text-gray-500">Checking recent feed items…</p>
+          <p className="text-sm text-muted-foreground">Checking recent feed items…</p>
         ) : matches.length === 0 ? (
-          <p className="text-sm text-gray-500">No matches in recent feed items.</p>
+          <p className="text-sm text-muted-foreground">No matches in recent feed items.</p>
         ) : (
           <ul className="space-y-1 text-sm">
             {matches.slice(0, compact ? 3 : 10).map((m, i) => (
-              <li key={i} className="text-gray-300">
+              <li key={i} className="text-muted-foreground">
                 <a href={m.link} target="_blank" rel="noopener noreferrer" className="hover:underline">
                   {m.title}
                 </a>

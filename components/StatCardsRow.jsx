@@ -6,13 +6,13 @@ import { AlertTriangle, Newspaper, Eye } from 'lucide-react';
 
 const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-function StatCard({ Icon, iconClass, label, value, sub, href }) {
+function StatCard({ Icon, badgeClass, iconClass, label, value, sub, href }) {
   return (
     <Link href={href} className="rounded-2xl bg-card ring-1 ring-border p-4 hover:ring-primary/40 transition-colors">
-      <div className="flex items-center gap-2 mb-2">
+      <div className={`h-9 w-9 rounded-full flex items-center justify-center mb-2 ${badgeClass}`}>
         <Icon size={16} className={iconClass} />
-        <span className="text-xs text-muted-foreground">{label}</span>
       </div>
+      <p className="text-xs text-muted-foreground mb-1">{label}</p>
       <p className="text-2xl font-bold text-foreground">{value}</p>
       {sub && <p className="text-[11px] text-muted-foreground mt-0.5">{sub}</p>}
     </Link>
@@ -41,6 +41,7 @@ export default function StatCardsRow() {
     <div className="grid grid-cols-3 gap-3">
       <StatCard
         Icon={AlertTriangle}
+        badgeClass="bg-critical/15"
         iconClass="text-critical"
         label="Critical Alerts"
         value={stats ? stats.criticalAlerts.count : '—'}
@@ -49,6 +50,7 @@ export default function StatCardsRow() {
       />
       <StatCard
         Icon={Newspaper}
+        badgeClass="bg-informational/15"
         iconClass="text-informational"
         label="Breaking News"
         value={stats ? stats.breakingNews.count24h : '—'}
@@ -57,7 +59,8 @@ export default function StatCardsRow() {
       />
       <StatCard
         Icon={Eye}
-        iconClass="text-high"
+        badgeClass="bg-accent-purple/15"
+        iconClass="text-accent-purple"
         label="Dark Web Hits"
         value={stats ? stats.darkWebHits.count : '—'}
         sub={stats ? `${stats.darkWebHits.monitored} monitored` : undefined}

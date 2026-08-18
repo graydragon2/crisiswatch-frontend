@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import AppShell from '@/components/AppShell';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { BAND_BADGE_CLASS } from '@/lib/severity';
+import { BAND_BADGE_CLASS, getBandByName } from '@/lib/severity';
+import ThreatGauge from '@/components/ThreatGauge';
 
 const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL;
 const RANGES = ['24h', '7d', '30d', '90d'];
@@ -68,9 +69,12 @@ export default function ThreatScorePage() {
           <Card>
             <CardContent className="py-6">
               <div className="flex flex-wrap items-center gap-4">
-                <div>
-                  <p className="text-5xl font-bold text-foreground">{summary.overall.score}</p>
-                  <p className="text-xs text-muted-foreground">out of 100</p>
+                <div className="relative flex-shrink-0">
+                  <ThreatGauge score={summary.overall.score} color={getBandByName(summary.overall.band).hex} size={150} />
+                  <div className="absolute inset-x-0 bottom-0 flex flex-col items-center">
+                    <p className="text-3xl font-bold text-foreground leading-none">{summary.overall.score}</p>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">out of 100</p>
+                  </div>
                 </div>
                 <span className={`text-sm font-semibold px-3 py-1 rounded-full ring-1 ${BAND_BADGE_CLASS[summary.overall.band] || BAND_BADGE_CLASS.Informational}`}>
                   {summary.overall.band}
@@ -154,7 +158,7 @@ export default function ThreatScorePage() {
                         <XAxis dataKey="timestamp" tickFormatter={(v) => formatTick(v, range)} stroke="#94a3b8" fontSize={11} />
                         <YAxis domain={[0, 100]} stroke="#94a3b8" fontSize={11} />
                         <Tooltip labelFormatter={(v) => new Date(v).toLocaleString()} contentStyle={{ background: '#131b2e', border: '1px solid rgba(148,163,184,0.14)', borderRadius: 8 }} />
-                        <Line type="monotone" dataKey="overallScore" stroke="#3b82f6" dot={false} strokeWidth={2} />
+                        <Line type="monotone" dataKey="score" stroke="#3b82f6" dot={false} strokeWidth={2} />
                       </LineChart>
                     </ResponsiveContainer>
                   </div>

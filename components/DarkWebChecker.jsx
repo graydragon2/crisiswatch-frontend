@@ -2,6 +2,7 @@
 'use client';
 
 import { useState } from 'react';
+import { CheckCircle2 } from 'lucide-react';
 
 export default function DarkWebChecker() {
   const [query, setQuery] = useState('');
@@ -62,8 +63,9 @@ export default function DarkWebChecker() {
           </ul>
         </div>
       )}
-      <p className="text-xs text-muted-foreground">
-        This check is on-demand only — the email you enter here isn't stored.
+      <p className="flex items-center gap-1.5 text-xs text-low">
+        <CheckCircle2 size={13} className="flex-shrink-0" />
+        Your data is never stored
       </p>
     </div>
   );

@@ -8,7 +8,7 @@ import LocationWatch from '@/components/LocationWatch';
 import RssHighlights from '@/components/RssHighlights';
 import KeywordAlerts from '@/components/KeywordAlerts';
 import DarkWebChecker from '@/components/DarkWebChecker';
-import ComingSoon from '@/components/ComingSoon';
+import PhishingAnalyzer from '@/components/PhishingAnalyzer';
 import { PropagationMap } from '@/components/PropagationMap';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 
@@ -73,12 +73,12 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
 
-            <Card className="lg:col-span-2">
+            <Card className="lg:col-span-2" id="phishing">
               <CardHeader>
                 <CardTitle>Phishing Detection</CardTitle>
               </CardHeader>
               <CardContent>
-                <ComingSoon note="Will accept an email, message, URL, or screenshot and return a risk score." />
+                <PhishingAnalyzer />
               </CardContent>
             </Card>
           </div>

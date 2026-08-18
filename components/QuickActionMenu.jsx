@@ -13,7 +13,7 @@ const ACTIONS = [
   { key: 'keyword', label: 'Add Keyword', Icon: Tag, href: '/dashboard#keywords' },
   { key: 'location', label: 'Watch Location', Icon: MapPin, href: '/dashboard#locations' },
   { key: 'email', label: 'Check Email', Icon: Mail, href: '/darkweb' },
-  { key: 'phishing', label: 'Analyze Phishing', Icon: ScanSearch, comingSoon: true },
+  { key: 'phishing', label: 'Analyze Phishing', Icon: ScanSearch, href: '/dashboard#phishing' },
   { key: 'report', label: 'Report Threat', Icon: Flag, comingSoon: true },
   { key: 'ai', label: 'Ask AI', Icon: Sparkles, comingSoon: true },
 ];

@@ -3,17 +3,12 @@
 
 import { useEffect, useState } from 'react';
 import { ComposableMap, Geographies, Geography, Marker } from 'react-simple-maps';
+import { getSeverityBand } from '@/lib/severity';
 
 // jsDelivr-hosted world-atlas package — the source react-simple-maps itself
 // recommends, and far more reliable than pointing at a random GitHub user's
 // raw file (which is what this pointed at before and was failing to load).
 const geoUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
-
-function severityColor(score) {
-  if (score >= 8) return '#ef4444'; // red
-  if (score >= 4) return '#facc15'; // yellow
-  return '#22c55e'; // green
-}
 
 export function PropagationMap() {
   const [points, setPoints] = useState([]);
@@ -51,9 +46,9 @@ export function PropagationMap() {
                 key={geo.rsmKey}
                 geography={geo}
                 style={{
-                  default: { fill: '#2d3748', outline: 'none' },
-                  hover: { fill: '#4a5568', outline: 'none' },
-                  pressed: { fill: '#2b6cb0', outline: 'none' },
+                  default: { fill: '#1e293b', outline: 'none' },
+                  hover: { fill: '#293548', outline: 'none' },
+                  pressed: { fill: '#3b82f6', outline: 'none' },
                 }}
               />
             ))
@@ -61,14 +56,14 @@ export function PropagationMap() {
         </Geographies>
         {points.map((p, i) => (
           <Marker key={i} coordinates={p.coordinates}>
-            <circle r={5} fill={severityColor(p.score)} stroke="#0f172a" strokeWidth={1.5}>
+            <circle r={5} fill={getSeverityBand(p.score).hex} stroke="#0b1220" strokeWidth={1.5}>
               <title>{`${p.location}: ${p.title} (severity ${p.score}/10)`}</title>
             </circle>
           </Marker>
         ))}
       </ComposableMap>
       {!loading && points.length === 0 && (
-        <p className="text-sm text-gray-500 mt-2">No geo-tagged threats to display right now.</p>
+        <p className="text-sm text-muted-foreground mt-2">No geo-tagged threats to display right now.</p>
       )}
     </div>
   );

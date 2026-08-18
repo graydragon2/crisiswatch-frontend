@@ -4,17 +4,10 @@ import { useEffect, useState } from 'react';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import AppShell from '@/components/AppShell';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { BAND_BADGE_CLASS } from '@/lib/severity';
 
 const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL;
 const RANGES = ['24h', '7d', '30d', '90d'];
-
-const BAND_STYLE = {
-  Critical: 'bg-critical/10 text-critical ring-critical/30',
-  High: 'bg-high/10 text-high ring-high/30',
-  Medium: 'bg-medium/10 text-medium ring-medium/30',
-  Low: 'bg-low/10 text-low ring-low/30',
-  Informational: 'bg-informational/10 text-informational ring-informational/30'
-};
 
 function DeltaBadge({ value }) {
   if (value === null || value === undefined) return <span className="text-xs text-muted-foreground">—</span>;
@@ -79,7 +72,7 @@ export default function ThreatScorePage() {
                   <p className="text-5xl font-bold text-foreground">{summary.overall.score}</p>
                   <p className="text-xs text-muted-foreground">out of 100</p>
                 </div>
-                <span className={`text-sm font-semibold px-3 py-1 rounded-full ring-1 ${BAND_STYLE[summary.overall.band] || BAND_STYLE.Informational}`}>
+                <span className={`text-sm font-semibold px-3 py-1 rounded-full ring-1 ${BAND_BADGE_CLASS[summary.overall.band] || BAND_BADGE_CLASS.Informational}`}>
                   {summary.overall.band}
                 </span>
                 <div className="flex gap-4 ml-auto text-sm">

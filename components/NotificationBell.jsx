@@ -2,16 +2,10 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Bell, X } from 'lucide-react';
+import { BAND_BADGE_CLASS } from '@/lib/severity';
 
 const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL;
 const POLL_MS = 60000;
-
-const CATEGORY_STYLE = {
-  Critical: 'bg-critical/10 text-critical ring-critical/30',
-  High: 'bg-high/10 text-high ring-high/30',
-  Medium: 'bg-medium/10 text-medium ring-medium/30',
-  Informational: 'bg-informational/10 text-informational ring-informational/30'
-};
 
 function timeAgo(iso) {
   const diffMs = Date.now() - new Date(iso).getTime();
@@ -139,7 +133,7 @@ export default function NotificationBell() {
                       {!n.read && <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0" />}
                       <div className="min-w-0">
                         <div className="flex items-center gap-2 mb-0.5">
-                          <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ring-1 ${CATEGORY_STYLE[n.category] || CATEGORY_STYLE.Informational}`}>
+                          <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ring-1 ${BAND_BADGE_CLASS[n.category] || BAND_BADGE_CLASS.Informational}`}>
                             {n.category}
                           </span>
                           <span className="text-[11px] text-muted-foreground">{timeAgo(n.createdAt)}</span>

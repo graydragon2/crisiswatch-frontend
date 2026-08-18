@@ -9,6 +9,7 @@ import RssHighlights from '@/components/RssHighlights';
 import KeywordAlerts from '@/components/KeywordAlerts';
 import DarkWebChecker from '@/components/DarkWebChecker';
 import PhishingAnalyzer from '@/components/PhishingAnalyzer';
+import QuickActionsRow from '@/components/QuickActionsRow';
 import { PropagationMap } from '@/components/PropagationMap';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 
@@ -83,6 +84,8 @@ export default function DashboardPage() {
             </Card>
           </div>
         </div>
+
+        <QuickActionsRow />
       </div>
     </AppShell>
   );

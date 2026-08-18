@@ -3,12 +3,17 @@
 
 import { useEffect, useState } from 'react';
 import { ComposableMap, Geographies, Geography, Marker } from 'react-simple-maps';
-import { getSeverityBand } from '@/lib/severity';
+import { getSeverityBand, getBandByName } from '@/lib/severity';
 
 // jsDelivr-hosted world-atlas package — the source react-simple-maps itself
 // recommends, and far more reliable than pointing at a random GitHub user's
 // raw file (which is what this pointed at before and was failing to load).
 const geoUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
+
+// Informational-severity items aren't meaningful to distinguish as map pins
+// (nothing warrants heightened awareness at that level), so the legend only
+// covers the 4 bands that actually matter for a threat map.
+const LEGEND_BANDS = ['Low', 'Medium', 'High', 'Critical'];
 
 export function PropagationMap() {
   const [points, setPoints] = useState([]);
@@ -65,6 +70,14 @@ export function PropagationMap() {
       {!loading && points.length === 0 && (
         <p className="text-sm text-muted-foreground mt-2">No geo-tagged threats to display right now.</p>
       )}
+      <div className="flex flex-wrap items-center gap-3 mt-2">
+        {LEGEND_BANDS.map((name) => (
+          <span key={name} className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <span className="h-2 w-2 rounded-full" style={{ backgroundColor: getBandByName(name).hex }} />
+            {name}
+          </span>
+        ))}
+      </div>
     </div>
   );
 }

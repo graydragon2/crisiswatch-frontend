@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { BAND_BADGE_CLASS } from '@/lib/severity';
+import { BAND_BADGE_CLASS, getBandByName } from '@/lib/severity';
+import ThreatGauge from '@/components/ThreatGauge';
 
 const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -42,11 +43,15 @@ export default function ThreatScoreCard() {
         <p className="text-sm text-muted-foreground">No Threat Score history yet — check back after the first monitoring cycle.</p>
       ) : (
         <div className="flex items-center gap-4">
-          <div>
-            <p className="text-4xl font-bold text-foreground leading-none">{summary.overall.score}</p>
-            <p className="text-[11px] text-muted-foreground mt-0.5">Threat Score / 100</p>
+          <div className="relative flex-shrink-0">
+            <ThreatGauge score={summary.overall.score} color={getBandByName(summary.overall.band).hex} size={130} />
+            <div className="absolute inset-x-0 bottom-0 flex flex-col items-center">
+              <p className="text-3xl font-bold text-foreground leading-none">{summary.overall.score}</p>
+              <p className="text-[10px] text-muted-foreground mt-0.5">/ 100</p>
+            </div>
           </div>
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1.5">
+            <p className="text-xs text-muted-foreground">Threat Score</p>
             <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ring-1 w-fit ${BAND_BADGE_CLASS[summary.overall.band] || BAND_BADGE_CLASS.Informational}`}>
               {summary.overall.band}
             </span>

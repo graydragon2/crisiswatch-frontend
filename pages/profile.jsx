@@ -12,13 +12,12 @@ const LINKS = [
   { href: '/dashboard#locations', label: 'Watched Locations' },
   { href: '/darkweb', label: 'Dark Web Monitoring' },
   { href: '/settings', label: 'Manual Threat Scorer' },
+  { href: '/subscribe', label: 'Subscription & Billing' },
   { href: '/admin', label: 'Admin Panel' },
 ];
 
 /**
  * Mobile bottom-nav destination that replaces Admin on small screens.
- * CrisisWatch is single-user (no accounts/auth), so this is app-level
- * preferences rather than a personal account page.
  */
 export default function ProfilePage() {
   const { theme, setTheme } = useTheme();

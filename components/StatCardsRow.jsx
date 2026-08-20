@@ -54,7 +54,7 @@ export default function StatCardsRow() {
         label="Breaking News"
         value={stats ? stats.breakingNews.count24h : '—'}
         sub="last 24h"
-        href="/feeds"
+        href="/threats"
       />
       <StatCard
         Icon={Eye}

@@ -32,19 +32,23 @@ export default function EmailAlertsSettings() {
       .finally(() => setLoading(false));
   }, []);
 
+  async function persistSettings() {
+    const res = await apiFetch('/api/alerts/settings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ enabled, recipient })
+    });
+    if (!res.ok) throw new Error('Failed to save settings.');
+  }
+
   const save = async () => {
     setSaving(true);
     setMessage(null);
     try {
-      const res = await apiFetch('/api/alerts/settings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ enabled, recipient })
-      });
-      if (!res.ok) throw new Error();
+      await persistSettings();
       setMessage({ type: 'success', text: 'Saved.' });
-    } catch {
-      setMessage({ type: 'error', text: 'Failed to save settings.' });
+    } catch (err) {
+      setMessage({ type: 'error', text: err.message || 'Failed to save settings.' });
     } finally {
       setSaving(false);
     }
@@ -54,6 +58,11 @@ export default function EmailAlertsSettings() {
     setTestSending(true);
     setMessage(null);
     try {
+      // Save whatever's currently in the box first — requiring a separate
+      // Save click before "Send test email" works wasn't obvious, and
+      // previously just 400'd with "No recipient configured" against
+      // whatever was last saved (or nothing) instead of what's typed now.
+      await persistSettings();
       const res = await apiFetch('/api/alerts/test', { method: 'POST' });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to send test email');
@@ -96,9 +105,15 @@ export default function EmailAlertsSettings() {
               </button>
               <button
                 onClick={sendTest}
-                disabled={testSending || !mailerConfigured}
+                disabled={testSending || !mailerConfigured || !recipient.trim()}
                 className="px-3 py-2 bg-white/10 text-card-foreground text-sm rounded hover:bg-white/20 disabled:opacity-50"
-                title={!mailerConfigured ? 'SMTP_USER/SMTP_PASS not configured on the server' : ''}
+                title={
+                  !mailerConfigured
+                    ? 'RESEND_API_KEY not configured on the server'
+                    : !recipient.trim()
+                    ? 'Enter an email address first'
+                    : 'Saves your current settings, then sends a test email'
+                }
               >
                 {testSending ? 'Sending…' : 'Send test email'}
               </button>

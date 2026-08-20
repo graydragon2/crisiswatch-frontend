@@ -32,7 +32,7 @@ export function PropagationMap() {
           const key = t.location;
           const existing = byLocation.get(key);
           if (!existing || t.score > existing.score) {
-            byLocation.set(key, { location: t.location, coordinates: t.coordinates, score: t.score, title: t.title });
+            byLocation.set(key, { location: t.location, coordinates: t.coordinates, score: t.score, title: t.title, link: t.link });
           }
         }
         setPoints([...byLocation.values()]);
@@ -60,7 +60,12 @@ export function PropagationMap() {
           }
         </Geographies>
         {points.map((p, i) => (
-          <Marker key={i} coordinates={p.coordinates}>
+          <Marker
+            key={i}
+            coordinates={p.coordinates}
+            onClick={() => p.link && window.open(p.link, '_blank', 'noopener,noreferrer')}
+            style={{ default: { cursor: p.link ? 'pointer' : 'default' } }}
+          >
             <circle r={5} fill={getSeverityBand(p.score).hex} stroke="#0b1220" strokeWidth={1.5}>
               <title>{`${p.location}: ${p.title} (severity ${p.score}/10)`}</title>
             </circle>

@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
-
-const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL;
+import { apiFetch } from '@/lib/api';
 
 // Risk levels here (None/Low/Medium/High) are monitoredEmailStore's own
 // exposure-count heuristic, not the 1-10 threat score scale — mapped to
@@ -52,7 +51,7 @@ export default function MonitoredAddresses() {
 
   const load = () => {
     setLoading(true);
-    fetch(`${BACKEND}/api/darkweb/monitored`)
+    apiFetch('/api/darkweb/monitored')
       .then((r) => r.json())
       .then((d) => setEmails(d.emails || []))
       .catch(() => setError('Failed to load monitored addresses.'))
@@ -66,7 +65,7 @@ export default function MonitoredAddresses() {
     setAdding(true);
     setError(null);
     try {
-      const res = await fetch(`${BACKEND}/api/darkweb/monitored`, {
+      const res = await apiFetch('/api/darkweb/monitored', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: newEmail.trim() })
@@ -84,7 +83,7 @@ export default function MonitoredAddresses() {
 
   const removeEmail = async (email) => {
     try {
-      const res = await fetch(`${BACKEND}/api/darkweb/monitored`, {
+      const res = await apiFetch('/api/darkweb/monitored', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email })

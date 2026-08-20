@@ -3,8 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { AlertTriangle, Newspaper, Eye } from 'lucide-react';
-
-const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL;
+import { apiFetch } from '@/lib/api';
 
 function StatCard({ Icon, badgeClass, iconClass, label, value, sub, href }) {
   return (
@@ -31,7 +30,7 @@ export default function StatCardsRow() {
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
-    fetch(`${BACKEND}/api/stats`)
+    apiFetch('/api/stats')
       .then((r) => r.json())
       .then(setStats)
       .catch(() => setStats(null));

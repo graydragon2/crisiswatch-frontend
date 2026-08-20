@@ -28,7 +28,11 @@ export function PropagationMap() {
         // one marker (sized/colored by the highest severity seen there).
         const byLocation = new Map();
         for (const t of threats) {
-          if (!t.coordinates) continue;
+          // Informational-severity items (score 0-1, "no real threat, routine
+          // news") aren't meaningful to plot on a threat map — skip them
+          // rather than showing an undifferentiated blue dot with nothing in
+          // the legend to explain it.
+          if (!t.coordinates || t.score < 2) continue;
           const key = t.location;
           const existing = byLocation.get(key);
           if (!existing || t.score > existing.score) {

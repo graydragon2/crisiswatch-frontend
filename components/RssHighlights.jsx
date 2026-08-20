@@ -76,7 +76,7 @@ export default function RssHighlights() {
           })}
         </ul>
       )}
-      <Link href="/feeds" className="text-sm text-primary hover:underline">
+      <Link href="/threats" className="text-sm text-primary hover:underline">
         View details →
       </Link>
     </div>

@@ -29,7 +29,7 @@ export default function ThreatCard({ item }) {
           <p className="text-sm font-semibold text-card-foreground">{item.title}</p>
           {item.summary && <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{item.summary}</p>}
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-2 text-xs text-muted-foreground">
-            {item.source && <span>{item.source}</span>}
+            {item.source && <span className="break-all">{item.source}</span>}
             {item.pubDate && <span>· {timeAgo(item.pubDate)}</span>}
             {item.category && <span className="px-1.5 py-0.5 rounded bg-white/5">{item.category}</span>}
             {band && <span className="px-1.5 py-0.5 rounded bg-white/5">{band.name} · {item.score}/10</span>}

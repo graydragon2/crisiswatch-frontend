@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
 import { getSeverityBand, BAND_DOT_CLASS } from '@/lib/severity';
+import { apiFetch } from '@/lib/api';
 
-const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL;
 const FETCH_TIMEOUT_MS = 30000;
 
 // NWS alert severities (Extreme/Severe/Moderate) are a different scale
@@ -28,7 +28,7 @@ export default function LocationWatch() {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 
-    fetch(`${BACKEND}/api/locations`, { signal: controller.signal })
+    apiFetch('/api/locations', { signal: controller.signal })
       .then((res) => res.json())
       .then((data) => setLocations(data.locations || []))
       .catch(() => setError(true))
@@ -48,7 +48,7 @@ export default function LocationWatch() {
   const addZip = async () => {
     if (!newZip.trim()) return;
     try {
-      await fetch(`${BACKEND}/api/locations`, {
+      await apiFetch('/api/locations', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ zip: newZip.trim() })
@@ -62,7 +62,7 @@ export default function LocationWatch() {
 
   const removeZip = async (zip) => {
     try {
-      await fetch(`${BACKEND}/api/locations`, {
+      await apiFetch('/api/locations', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ zip })

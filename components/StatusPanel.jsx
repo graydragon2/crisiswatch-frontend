@@ -76,7 +76,7 @@ export default function StatusPanel() {
               <Row ok={status.leakcheckConfigured} label="Dark web checks" />
               <Row ok={status.mailerConfigured} label="Email alerts" />
               <div className="pt-2 mt-2 border-t border-border text-xs text-muted-foreground">
-                {status.feedCount} feed{status.feedCount === 1 ? '' : 's'} · {status.keywordCount} keyword{status.keywordCount === 1 ? '' : 's'} watched
+                {status.feedCount} feed{status.feedCount === 1 ? '' : 's'} watched
               </div>
             </>
           ) : (

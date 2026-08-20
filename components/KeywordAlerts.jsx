@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
+import { apiFetch } from '@/lib/api';
 
 const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -13,7 +14,7 @@ export default function KeywordAlerts({ compact = false }) {
 
   const fetchKeywords = async () => {
     try {
-      const res = await fetch(`${BACKEND}/api/keywords`);
+      const res = await apiFetch('/api/keywords');
       const json = await res.json();
       setKeywords(json.keywords || []);
     } catch {
@@ -41,7 +42,7 @@ export default function KeywordAlerts({ compact = false }) {
   const addKeyword = async () => {
     if (!newKeyword.trim()) return;
     try {
-      const res = await fetch(`${BACKEND}/api/keywords`, {
+      const res = await apiFetch('/api/keywords', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ keyword: newKeyword.trim() }),
@@ -56,7 +57,7 @@ export default function KeywordAlerts({ compact = false }) {
 
   const removeKeyword = async (keyword) => {
     try {
-      const res = await fetch(`${BACKEND}/api/keywords`, {
+      const res = await apiFetch('/api/keywords', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ keyword }),

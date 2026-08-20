@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Bell, X } from 'lucide-react';
 import { BAND_BADGE_CLASS } from '@/lib/severity';
+import { apiFetch } from '@/lib/api';
 
-const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL;
 const POLL_MS = 60000;
 
 function timeAgo(iso) {
@@ -31,7 +31,7 @@ export default function NotificationBell() {
 
   const load = async () => {
     try {
-      const res = await fetch(`${BACKEND}/api/notifications`);
+      const res = await apiFetch('/api/notifications');
       const data = await res.json();
       setNotifications(data.notifications || []);
       setUnreadCount(data.unreadCount || 0);
@@ -59,7 +59,7 @@ export default function NotificationBell() {
     setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
     setUnreadCount((prev) => Math.max(0, prev - 1));
     try {
-      await fetch(`${BACKEND}/api/notifications/${id}/read`, { method: 'POST' });
+      await apiFetch(`/api/notifications/${id}/read`, { method: 'POST' });
     } catch {
       // best-effort; next poll reconciles
     }
@@ -69,7 +69,7 @@ export default function NotificationBell() {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
     setUnreadCount(0);
     try {
-      await fetch(`${BACKEND}/api/notifications/read-all`, { method: 'POST' });
+      await apiFetch('/api/notifications/read-all', { method: 'POST' });
     } catch {
       // best-effort; next poll reconciles
     }
@@ -81,7 +81,7 @@ export default function NotificationBell() {
     setNotifications((prev) => prev.filter((n) => n.id !== id));
     if (wasUnread) setUnreadCount((prev) => Math.max(0, prev - 1));
     try {
-      await fetch(`${BACKEND}/api/notifications/${id}`, { method: 'DELETE' });
+      await apiFetch(`/api/notifications/${id}`, { method: 'DELETE' });
     } catch {
       // best-effort; next poll reconciles
     }

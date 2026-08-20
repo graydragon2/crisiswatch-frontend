@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-
-const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL;
+import { apiFetch } from '@/lib/api';
 
 /**
  * Email alert notification preferences — used on both the (desktop) Admin
@@ -22,7 +21,7 @@ export default function EmailAlertsSettings() {
   const [message, setMessage] = useState(null);
 
   useEffect(() => {
-    fetch(`${BACKEND}/api/alerts/settings`)
+    apiFetch('/api/alerts/settings')
       .then((r) => r.json())
       .then((d) => {
         setEnabled(Boolean(d.enabled));
@@ -37,7 +36,7 @@ export default function EmailAlertsSettings() {
     setSaving(true);
     setMessage(null);
     try {
-      const res = await fetch(`${BACKEND}/api/alerts/settings`, {
+      const res = await apiFetch('/api/alerts/settings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ enabled, recipient })
@@ -55,7 +54,7 @@ export default function EmailAlertsSettings() {
     setTestSending(true);
     setMessage(null);
     try {
-      const res = await fetch(`${BACKEND}/api/alerts/test`, { method: 'POST' });
+      const res = await apiFetch('/api/alerts/test', { method: 'POST' });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to send test email');
       setMessage({ type: 'success', text: 'Test email sent — check your inbox.' });

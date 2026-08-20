@@ -10,7 +10,7 @@ export default function Header({ user, onLogout }) {
       <div className="flex items-center gap-2.5 min-w-0">
         <Shield size={26} className="text-primary flex-shrink-0" />
         <div className="min-w-0">
-          <h1 className="text-xl md:text-2xl font-bold text-card-foreground leading-tight truncate">CrisisWatch</h1>
+          <h1 className="text-xl md:text-2xl font-bold text-card-foreground leading-tight truncate">Contingency Brief</h1>
           <p className="text-xs md:text-sm text-muted-foreground truncate">AI-Powered Security Threat Monitoring</p>
         </div>
       </div>

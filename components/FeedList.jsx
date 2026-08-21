@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
+import { apiFetch } from '@/lib/api'
 
 const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL
 
@@ -33,7 +34,7 @@ export default function FeedList() {
     setAdding(true)
     setError('')
     try {
-      const res = await fetch(`${BACKEND}/api/feeds`, {
+      const res = await apiFetch('/api/feeds', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: newFeed.trim() }),
@@ -52,7 +53,7 @@ export default function FeedList() {
   const removeFeed = async (url) => {
     setError('')
     try {
-      const res = await fetch(`${BACKEND}/api/feeds`, {
+      const res = await apiFetch('/api/feeds', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url }),

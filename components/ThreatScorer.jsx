@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { apiFetch } from '@/lib/api';
 
 export default function ThreatScorer() {
   const [text, setText]       = useState('');
@@ -15,7 +16,7 @@ export default function ThreatScorer() {
     setScore(null);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/score`, {
+      const res = await apiFetch('/api/score', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text }),

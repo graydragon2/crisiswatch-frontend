@@ -3,8 +3,8 @@
 import { useRef, useState } from 'react';
 import { Mail, MessageSquare, Link2, Image as ImageIcon } from 'lucide-react';
 import { BAND_BADGE_CLASS } from '@/lib/severity';
+import { apiFetch } from '@/lib/api';
 
-const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL;
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 
 const TABS = [
@@ -69,7 +69,7 @@ export default function PhishingAnalyzer() {
       } else {
         body = { type: tab, content: text.trim() };
       }
-      const res = await fetch(`${BACKEND}/api/phishing/analyze`, {
+      const res = await apiFetch('/api/phishing/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)

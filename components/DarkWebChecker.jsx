@@ -3,6 +3,7 @@
 
 import { useState } from 'react';
 import { CheckCircle2 } from 'lucide-react';
+import { apiFetch } from '@/lib/api';
 
 export default function DarkWebChecker() {
   const [query, setQuery] = useState('');
@@ -16,11 +17,7 @@ export default function DarkWebChecker() {
     setError(null);
     setResult(null);
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/darkweb?email=${encodeURIComponent(
-          query
-        )}`
-      );
+      const res = await apiFetch(`/api/darkweb?email=${encodeURIComponent(query)}`);
       const json = await res.json().catch(() => null);
       if (!res.ok) throw new Error(json?.error || `Status ${res.status}`);
       setResult(json);

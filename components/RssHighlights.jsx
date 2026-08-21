@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getSeverityBand, BAND_DOT_CLASS } from '@/lib/severity';
+import { apiFetch } from '@/lib/api';
 
 const DISPLAY_LIMIT = 8;
 
@@ -18,7 +19,7 @@ export default function RssHighlights() {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/threats?useAI=true`, { signal: controller.signal })
+    apiFetch('/api/threats?useAI=true', { signal: controller.signal })
       .then((res) => res.json())
       .then((data) => {
         const all = data.threats || [];

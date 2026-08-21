@@ -4,8 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import AppShell from '@/components/AppShell';
 import ThreatCard from '@/components/ThreatCard';
 import { THREAT_CATEGORIES } from '@/lib/categories';
-
-const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL;
+import { apiFetch } from '@/lib/api';
 
 export default function ThreatsPage() {
   const [threats, setThreats] = useState([]);
@@ -23,7 +22,7 @@ export default function ThreatsPage() {
       if (keywords.trim()) params.set('keywords', keywords.trim());
       if (sources.trim()) params.set('sources', sources.trim());
 
-      const res = await fetch(`${BACKEND}/api/threats?${params}`);
+      const res = await apiFetch(`/api/threats?${params}`);
       const data = await res.json();
       setThreats(data.threats || []);
     } catch (err) {

@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
 import { apiFetch } from '@/lib/api';
 
-const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL;
-
 export default function KeywordAlerts({ compact = false }) {
   const [keywords, setKeywords] = useState([]);
   const [newKeyword, setNewKeyword] = useState('');
@@ -32,7 +30,7 @@ export default function KeywordAlerts({ compact = false }) {
       return;
     }
     setLoading(true);
-    fetch(`${BACKEND}/api/threats?keywords=${encodeURIComponent(keywords.join(','))}&useAI=false`)
+    apiFetch(`/api/threats?keywords=${encodeURIComponent(keywords.join(','))}&useAI=false`)
       .then((res) => res.json())
       .then((data) => setMatches(data.threats || []))
       .catch(() => setMatches([]))

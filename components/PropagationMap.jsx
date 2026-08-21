@@ -4,6 +4,7 @@
 import { useEffect, useState } from 'react';
 import { ComposableMap, Geographies, Geography, Marker } from 'react-simple-maps';
 import { getSeverityBand, getBandByName } from '@/lib/severity';
+import { apiFetch } from '@/lib/api';
 
 // jsDelivr-hosted world-atlas package — the source react-simple-maps itself
 // recommends, and far more reliable than pointing at a random GitHub user's
@@ -20,7 +21,7 @@ export function PropagationMap() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/threats?useAI=true`)
+    apiFetch('/api/threats?useAI=true')
       .then((res) => res.json())
       .then((data) => {
         const threats = data.threats || [];

@@ -1,4 +1,4 @@
-# CrisisWatch Frontend
+# Contingency Brief
 
 Next.js dashboard for [crisiswatch-api](https://github.com/graydragon2/crisiswatch-api) — tracks local and worldwide crises via RSS, before they hit mainstream news, with AI severity scoring, a live propagation map, a keyword watchlist, and dark-web email exposure checks.
 
